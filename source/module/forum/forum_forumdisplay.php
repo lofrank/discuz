@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: forum_forumdisplay.php 30548 2012-06-01 09:14:29Z zhengqingpeng $
+ *      $Id: forum_forumdisplay.php 31822 2012-10-12 06:24:42Z zhangjie $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -457,10 +457,19 @@ if($_G['forum']['threadsorts']['types'] && $sortoptionarray && ($_GET['searchopt
 		$forumdisplayadd['page'] = '&sortid='.$sortid;
 		foreach($_GET['searchoption'] as $optionid => $option) {
 			$optionid = intval($optionid);
-			$option['value'] = rawurlencode((string)$option['value']);
+			$searchoption = '';
+			if(is_array($option['value'])) {
+				foreach($option['value'] as $v) {
+					$v = rawurlencode((string)$v);
+					$searchoption .= "&searchoption[$optionid][value][$v]=$v";
+				}
+			} else {
+				$option['value'] = rawurlencode((string)$option['value']);
+				$option['value'] && $searchoption = "&searchoption[$optionid][value]=$option[value]";
+			}
 			$option['type'] = rawurlencode((string)$option['type']);
 			$identifier = $sortoptionarray[$sortid][$optionid]['identifier'];
-			$forumdisplayadd['page'] .= $option['value'] ? "&searchoption[$optionid][value]=$option[value]&searchoption[$optionid][type]=$option[type]" : '';
+			$forumdisplayadd['page'] .= $searchoption ? "$searchoption&searchoption[$optionid][type]=$option[type]" : '';
 		}
 	}
 
@@ -606,6 +615,7 @@ $todaytime = strtotime(dgmdate(TIMESTAMP, 'Ymd'));
 $verify = $verifyuids = $grouptids = array();
 $threadindex = 0;
 foreach($threadlist as $thread) {
+	$thread['ordertype'] = getstatus($thread['status'], 4);
 	if($_G['forum']['picstyle'] && empty($_G['cookie']['forumdefstyle'])) {
 		if($thread['fid'] != $_G['fid'] && empty($thread['cover'])) {
 			continue;

@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: function_portalcp.php 30318 2012-05-22 07:48:40Z chenmengshu $
+ *      $Id: function_portalcp.php 31861 2012-10-17 08:36:52Z zhangguosheng $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -138,8 +138,9 @@ function getdiytpldir($targettplname) {
 	if($pre) {
 		$forum = C::t('forum_forum')->fetch(intval(str_replace($pre, '', $targettplname)));
 		if(!empty($forum['styleid'])) {
-			loadcache('style_'.$forum['styleid']);
-			$tpldir = $_G['cache']['tpldir'];
+			$_cname = 'style_'.$forum['styleid'];
+			loadcache($_cname);
+			$tpldir = empty($_G['cache'][$_cname]['tpldir']) ? '' : $_G['cache'][$_cname]['tpldir'];
 		}
 	}
 	return $tpldir ? $tpldir : ($_G['cache']['style_default']['tpldir'] ? $_G['cache']['style_default']['tpldir'] : './template/default');
@@ -150,7 +151,7 @@ function save_diy_data($tpldirectory, $primaltplname, $targettplname, $data, $da
 	if (empty($data) || !is_array($data)) return false;
 	checksecurity($data['spacecss']);
 	if(empty($tpldirectory)) {
-		$tpldirectory = getdiytpldir($primaltplname);
+		$tpldirectory = getdiytpldir($targettplname);
 	}
 	$isextphp = false;
 	$file = $tpldirectory.'/'.$primaltplname.'.htm';

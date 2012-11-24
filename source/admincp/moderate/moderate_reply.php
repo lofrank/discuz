@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: moderate_reply.php 30465 2012-05-30 04:10:03Z zhengqingpeng $
+ *      $Id: moderate_reply.php 31793 2012-10-11 02:05:43Z monkey $
  */
 
 if(!defined('IN_DISCUZ') || !defined('IN_ADMINCP')) {
@@ -77,12 +77,16 @@ if(!submitcheck('modsubmit') && !$_GET['fast']) {
 		$fidadd['fids'] = $modfid;
 	}
 
-	$modcount = C::t('common_moderate')->count_by_search_for_post(getposttable($posttable), $moderatestatus, 0, ($modfid > 0 ? $modfid : 0), $_GET['username'], (($dateline &&  $dateline != 'all') ? (TIMESTAMP - $dateline) : null), $_GET['title'], ($modfid == -1 ? 1 : 0));
-	if(empty($modcount) && $sqlwhere == '' && empty($fidadd) && empty($modfid)) {
-		C::t('common_moderate')->delete_by_status_idtype($moderatestatus, 'pid');
-	}
+	$modcount = C::t('common_moderate')->count_by_search_for_post(getposttable($posttable), $moderatestatus, 0, ($modfid > 0 ? $modfid : 0), $_GET['username'], (($dateline &&  $dateline != 'all') ? (TIMESTAMP - $dateline) : null), $_GET['title']);
 	$start_limit = ($page - 1) * $ppp;
-	$postarr = C::t('common_moderate')->fetch_all_by_search_for_post(getposttable($posttable), $moderatestatus, 0, ($modfid > 0 ? $modfid : 0), $_GET['username'], (($dateline &&  $dateline != 'all') ? (TIMESTAMP - $dateline) : null), $_GET['title'], ($modfid == -1 ? 1 : 0), $start_limit, $ppp);
+	$postarr = C::t('common_moderate')->fetch_all_by_search_for_post(getposttable($posttable), $moderatestatus, 0, ($modfid > 0 ? $modfid : 0), $_GET['username'], (($dateline &&  $dateline != 'all') ? (TIMESTAMP - $dateline) : null), $_GET['title'], $start_limit, $ppp);
+	if($postarr) {
+		$_fids = array();
+		foreach($postarr as $_post) {
+			$_fids[$_post['fid']] = $_post['fid'];
+		}
+		$_forums = C::t('forum_forum')->fetch_all($_fids);
+	}
 	$multipage = multi($modcount, $ppp, $page, ADMINSCRIPT."?action=moderate&operation=replies&filter=$filter&modfid=$modfid&dateline={$_GET['dateline']}&username={$_GET['username']}&title={$_GET['title']}&ppp=$ppp&showcensor=$showcensor&posttableid=$posttable");
 
 	echo '<p class="margintop marginbot"><a href="javascript:;" onclick="expandall();">'.cplang('moderate_all_expand').'</a> <a href="javascript:;" onclick="foldall();">'.cplang('moderate_all_fold').'</a><p>';
@@ -90,7 +94,16 @@ if(!submitcheck('modsubmit') && !$_GET['fast']) {
 	$censor = & discuz_censor::instance();
 	$censor->highlight = '#FF0000';
 	require_once libfile('function/misc');
-	foreach($postarr as $post) {
+	foreach($postarr as &$post) {
+		$_forum = $_forums[$post['fid']];
+		$_arr = array(
+			'forumname' => $_forum['name'],
+			'allowsmilies' => $_forum['allowsmilies'],
+			'allowhtml' => $_forum['allowhtml'],
+			'allowbbcode' => $_forum['allowbbcode'],
+			'allowimgcode' => $_forum['allowimgcode'],
+		);
+		$post = array_merge($post, $_arr);
 		if(getstatus($post['status'], 5)) {
 			$post['authorid'] = 0;
 			$post['author'] = cplang('moderate_t_comment');
@@ -99,7 +112,7 @@ if(!submitcheck('modsubmit') && !$_GET['fast']) {
 		$post['subject'] = $post['subject'] ? '<b>'.$post['subject'].'</b>' : '<i>'.$lang['nosubject'].'</i>';
 		$post['message'] = discuzcode($post['message'], $post['smileyoff'], $post['bbcodeoff'], sprintf('%00b', $post['htmlon']), $post['allowsmilies'], $post['allowbbcode'], $post['allowimgcode'], $post['allowhtml']);
 		if($showcensor) {
-			$censor->check($post['tsubject']);
+			$censor->check($post['subject']);
 			$censor->check($post['message']);
 		}
 		$post_censor_words = $censor->words_found;
@@ -130,7 +143,7 @@ if(!submitcheck('modsubmit') && !$_GET['fast']) {
 		showtagheader('tbody', '', true, 'hover');
 		showtablerow("id=\"mod_$post[pid]_row1\"", array("id=\"mod_$post[pid]_row1_op\" rowspan=\"3\" class=\"rowform threadopt\" style=\"width:80px;\"", '', 'width="120"', 'width="120"', 'width="55"'), array(
 			"<ul class=\"nofloat\"><li><input class=\"radio\" type=\"radio\" name=\"moderate[$post[pid]]\" id=\"mod_$post[pid]_1\" value=\"validate\" onclick=\"mod_setbg($post[pid], 'validate');\"><label for=\"mod_$post[pid]_1\">$lang[validate]</label></li><li><input class=\"radio\" type=\"radio\" name=\"moderate[$post[pid]]\" id=\"mod_$post[pid]_2\" value=\"delete\" onclick=\"mod_setbg($post[pid], 'delete');\"><label for=\"mod_$post[pid]_2\">$lang[delete]</label></li><li><input class=\"radio\" type=\"radio\" name=\"moderate[$post[pid]]\" id=\"mod_$post[pid]_3\" value=\"ignore\" onclick=\"mod_setbg($post[pid], 'ignore');\"><label for=\"mod_$post[pid]_3\">$lang[ignore]</label></li></ul>",
-			"<h3><a href=\"javascript:;\" onclick=\"display_toggle('$post[pid]');\">$post[tsubject]</a> $post_censor_text</h3><p>$post[useip]</p>",
+			"<h3><a href=\"javascript:;\" onclick=\"display_toggle('$post[pid]');\">$post[subject]</a> $post_censor_text</h3><p>$post[useip]</p>",
 			"<a href=\"forum.php?mod=forumdisplay&fid=$post[fid]\">$post[forumname]</a>",
 			"<p><a target=\"_blank\" href=\"".ADMINSCRIPT."?action=members&operation=search&uid=$post[authorid]&submit=yes\">$post[author]</a></p> <p>$post[dateline]</p>",
 			"<a target=\"_blank\" href=\"forum.php?mod=redirect&goto=findpost&ptid=$post[tid]&pid=$post[pid]\">$lang[view]</a>&nbsp;<a href=\"forum.php?mod=viewthread&tid=$post[tid]&modthreadkey=$post[modthreadkey]\" target=\"_blank\">$lang[edit]</a>",

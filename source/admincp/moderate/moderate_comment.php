@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: moderate_comment.php 27435 2012-01-31 09:00:52Z chenmengshu $
+ *      $Id: moderate_comment.php 31995 2012-10-30 06:14:56Z liulanbo $
  */
 
 if(!defined('IN_DISCUZ') || !defined('IN_ADMINCP')) {
@@ -163,16 +163,16 @@ if(!submitcheck('modsubmit') && !$_GET['fast']) {
 		}
 	}
 
-	if($validate_cids = dimplode($moderation['validate'])) {
-		$validates = C::t('home_comment')->update($validate_cids, array('status' => '0'));
+	if($moderation['validate']) {
+		$validates = C::t('home_comment')->update($moderation['validate'], array('status' => '0'));
 	}
 	if(!empty($moderation['delete'])) {
 		require_once libfile('function/delete');
 		$comments = deletecomments($moderation['delete']);
 		$deletes = count($comments);
 	}
-	if($ignore_cids = dimplode($moderation['ignore'])) {
-		$ignores = C::t('home_comment')->update($ignore_cids, array('status' => '2'));
+	if($moderation['ignore']) {
+		$ignores = C::t('home_comment')->update($moderation['ignore'], array('status' => '2'));
 	}
 
 	if($_GET['fast']) {

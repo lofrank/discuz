@@ -4,7 +4,7 @@
  *      [Discuz! X] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: search.class.php 30263 2012-05-17 13:44:07Z zhouxiaobo $
+ *      $Id: search.class.php 31731 2012-09-25 13:33:46Z zhouxiaobo $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -70,7 +70,9 @@ class plugin_cloudsearch {
 		}
 
 		if(CURSCRIPT == 'forum' && (CURMODULE == 'viewthread' || CURMODULE == 'forumdisplay')) {
-			$res .= tpl_cloudsearch_global_footer_mini();
+			if($this->_is_from_search_engine()) {
+				$res .= tpl_cloudsearch_global_footer_mini();
+			}
 		}
 
 		if ($this->allow_search_suggest) {
@@ -84,6 +86,17 @@ class plugin_cloudsearch {
 		$res .= tpl_cloudsearch_global_footer_formula_output();
 
 		return $res;
+	}
+
+	private function _is_from_search_engine() {
+
+		$regex = "((http|https)\:\/\/)?";
+		$regex .= "([a-z]*.)+?(ask.com|yahoo.com|bing.com|baidu.com|soso.com|google.com|google.cn|gougou.com|sogou.com|yahoo.cn|youdao.com|google.com.hk|360.cn|360sou.com|so.com)(.[a-z]{2,3})?\/";
+		if(preg_match("/^$regex/i", $_SERVER['HTTP_REFERER'])) {
+			return true;
+		}
+
+		return false;
 	}
 
 	public function topicadmin_message($params) {
@@ -500,26 +513,12 @@ class plugin_cloudsearch_forum extends plugin_cloudsearch {
 
 	public function index_forum_extra_output() {
 
-		return;
-		if (!$this->allow || !$this->allow_forum_recommend) {
-			return;
-		}
-
-		global $forumlist;
-
-		return $this->_get_forum_hotspot($forumlist);
+		return array();
 	}
 
 	public function forumdisplay_subforum_extra_output() {
 
-		return;
-		if (!$this->allow || !$this->allow_forum_recommend) {
-			return;
-		}
-
-		global $sublist;
-
-		return $this->_get_forum_hotspot($sublist);
+		return array();
 	}
 
 	private function _get_forum_hotspot($forumlist) {

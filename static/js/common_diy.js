@@ -2,7 +2,7 @@
 	[Discuz!] (C)2001-2099 Comsenz Inc.
 	This is NOT a freeware, use is subject to license terms
 
-	$Id: common_diy.js 24718 2011-10-09 09:40:35Z zhangguosheng $
+	$Id: common_diy.js 31093 2012-07-16 03:54:34Z zhangguosheng $
 */
 
 String.prototype.property2js = function(){
@@ -806,7 +806,7 @@ var Util = {
 			var collection = ele.getElementsByTagName('a');
 			if (collection.length > 0) {
 				 shref = collection[0]['href'];
-				 scolor = collection[0].style['color'];
+				 scolor = collection[0].style['color'] + ' !important';
 			}
 			collection = ele.getElementsByTagName('img');
 			if (collection.length > 0) {

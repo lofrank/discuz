@@ -76,7 +76,7 @@ $pluginhook = !empty($_G['setting']['pluginhooks']['viewthread_attach_extra'][$a
 				<!--{else}-->
 					<a href="forum.php?mod=misc&action=attachpay&aid=$attach[aid]&tid=$attach[tid]" onclick="showWindow('attachpay', this.href)">$attach[filename]</a>
 				<!--{/if}-->
-				<div class="tip tip_4" id="aid$attach[aid]_menu" style="display: none">
+				<div class="tip tip_4" id="aid$attach[aid]_menu" style="display: none" disautofocus="true">
 					<div class="tip_c">
 						<p class="y">$attach[dateline] {lang upload}</p>
 						<p>{lang clicktodownload}</p>
@@ -127,7 +127,7 @@ $pluginhook = !empty($_G['setting']['pluginhooks']['viewthread_attach_extra'][$a
 							<a href="forum.php?mod=ajax&action=setthreadcover&aid=$attach[aid]&fid=$_G[fid]" onclick="showWindow('setcover{$attach[aid]}', this.href)">{lang set_cover}</a>
 						<!--{/if}-->
 					</p>
-					<div class="tip tip_4" id="aid$attach[aid]_menu" style="display: none">
+					<div class="tip tip_4" id="aid$attach[aid]_menu" style="display: none" disautofocus="true">
 						<div class="tip_c">
 							<p class="y">$attach[dateline] {lang upload}</p>
 							<p>{lang clicktodownload}</p>
@@ -195,7 +195,7 @@ $musiccode = getstatus($post[status], 7) && fileext($attach['attachment']) == 'm
 			<!--{else}-->
 				<img{if $attach['price'] && $_G['forum_attachmentdown'] && $_G['uid'] != $attach['uid']} class="attprice"{/if} id="aimg_$attach[aid]" aid="$attach[aid]" src="{STATICURL}image/common/none.gif" zoomfile="{if $attach[refcheck]}forum.php?mod=attachment{$is_archive}&aid=$aidencode&noupdate=yes&nothumb=yes{else}{$attach[url]}$attach[attachment]{/if}" file="{if $attach[refcheck]}forum.php?mod=attachment{$is_archive}&aid=$aidencode&noupdate=yes{else}{$attach[url]}$attach[attachment]{/if}" $widthcode id="aimg_$attach[aid]" inpost="1" alt="$attach[imgalt]" title="$attach[imgalt]" onmouseover="showMenu({'ctrlid':this.id,'pos':'12'})" />
 			<!--{/if}-->
-			<div class="tip tip_4 aimg_tip" id="aimg_$attach[aid]_menu" style="position: absolute; display: none">
+			<div class="tip tip_4 aimg_tip" id="aimg_$attach[aid]_menu" style="position: absolute; display: none" disautofocus="true">
 				<div class="tip_c xs0">
 					<div class="y">$attach[dateline] {lang upload}</div>
 					<a href="forum.php?mod=attachment{$is_archive}&aid=$aidencode&nothumb=yes" title="$attach[filename] {lang downloads}:$attach[downloads]" target="_blank"><strong>{lang download}</strong> <span class="xs0">($attach[attachsize])</span></a>
@@ -221,7 +221,7 @@ $musiccode = getstatus($post[status], 7) && fileext($attach['attachment']) == 'm
 			<!--{/if}-->
 			<em class="xg1">($attach[attachsize], {lang downloads}: $attach[downloads]<!--{if $attach['price']}-->, {lang price}: $attach[price] {$_G['setting']['extcredits'][$_G['setting']['creditstransextra'][1]][unit]}{$_G['setting']['extcredits'][$_G['setting']['creditstransextra'][1]][title]}<!--{/if}-->)</em>
 		</span>
-		<div class="tip tip_4" id="attach_$attach[aid]_menu" style="position: absolute; display: none">
+		<div class="tip tip_4" id="attach_$attach[aid]_menu" style="position: absolute; display: none" disautofocus="true">
 			<div class="tip_c xs0">
 				<div class="y">$attach[dateline] {lang upload}</div>
 				{lang clicktodownload}

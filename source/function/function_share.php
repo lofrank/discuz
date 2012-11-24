@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: function_share.php 26635 2011-12-19 01:59:13Z zhangguosheng $
+ *      $Id: function_share.php 31895 2012-10-23 02:22:16Z zhengqingpeng $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -16,6 +16,11 @@ function mkshare($share) {
 
 	$searchs = $replaces = array();
 	if($share['body_data']) {
+		if(isset($share['body_data']['flashaddr'])) {
+			$share['body_data']['flashaddr'] = addslashes($share['body_data']['flashaddr']);
+		} elseif(isset($share['body_data']['musicvar'])) {
+			$share['body_data']['musicvar'] = addslashes($share['body_data']['musicvar']);
+		}
 		foreach (array_keys($share['body_data']) as $key) {
 			$searchs[] = '{'.$key.'}';
 			$replaces[] = $share['body_data'][$key];

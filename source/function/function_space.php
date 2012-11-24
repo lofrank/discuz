@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: function_space.php 30433 2012-05-29 02:45:59Z zhengqingpeng $
+ *      $Id: function_space.php 32010 2012-10-31 02:12:04Z zhengqingpeng $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -570,7 +570,7 @@ function getblockhtml($blockname,$parameters = array()) {
 		case 'myapp':
 			$html = '';
 			$listclass = 'ptm ml mls cl';
-			$userapps = C::t('home_userapp')->fetch_all_by_uid_appid($_G['uid'], 0, 'menuorder');
+			$userapps = C::t('home_userapp')->fetch_all_by_uid_appid($uid, 0, 'menuorder', 'DESC', 0, $shownum);
 			$appids = array();
 			foreach($userapps as $app) {
 				$appids[$app['appid']] = $app['appid'];
@@ -650,6 +650,8 @@ function getblockhtml($blockname,$parameters = array()) {
 function mkfeedhtml($value) {
 	global $_G;
 
+	$_GET['uid'] = intval($_GET['uid']);
+	$_GET['view'] = dhtmlspecialchars($_GET['view']);
 	$html = '';
 	$html .= "<li class=\"cl $value[magic_class]\" id=\"feed_{$value[feedid]}_li\">";
 	$html .= "<div class=\"cl\" {$value[style]}>";
@@ -739,8 +741,11 @@ function check_ban_block($blockname, $space) {
 		$return = false;
 	} elseif($blockname == 'thread' && $_G['setting']['allowviewuserthread'] === -1) {
 		$return = false;
-	} elseif($blockname == 'myapp' && (empty($_G['setting']['my_app_status']) || empty($_G['cache']['usergroup_'.$space['groupid']]['allowmyop']))) {
-		$return = false;
+	} elseif($blockname == 'myapp') {
+		loadcache('usergroup_'.$space['groupid']);
+		if(empty($_G['setting']['my_app_status']) || empty($_G['cache']['usergroup_'.$space['groupid']]['allowmyop'])) {
+			$return = false;
+		}
 	}
 	return $return;
 }

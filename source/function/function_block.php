@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: function_block.php 30547 2012-06-01 09:06:40Z zhangguosheng $
+ *      $Id: function_block.php 32018 2012-10-31 06:49:32Z zhangguosheng $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -221,7 +221,7 @@ function block_updatecache($bid, $forceupdate=false) {
 			$shownum = intval($block['shownum']);
 			$titlelength	= !empty($block['param']['titlelength']) ? intval($block['param']['titlelength']) : 40;
 			$summarylength	= !empty($block['param']['summarylength']) ? intval($block['param']['summarylength']) : 80;
-			foreach(C::t('common_block_item_data')->fetch_all_by_bid($bid, 1, 0, $shownum, $bannedids, false) as $value) {
+			foreach(C::t('common_block_item_data')->fetch_all_by_bid($bid, 1, 0, $shownum * 2, $bannedids, false) as $value) {
 				$value['title'] = cutstr($value['title'], $titlelength, '');
 				$value['summary'] = cutstr($value['summary'], $summarylength, '');
 				$value['itemtype'] = '3';
@@ -292,7 +292,8 @@ function block_template($bid) {
 
 		$order = 0;
 		$dynamicparts = array();
-		foreach($block['itemlist'] as $itemid=>$blockitem) {
+		foreach($block['itemlist'] as $position=>$blockitem) {
+			$itemid = $blockitem['itemid'];
 			$order++;
 
 			$rkey = $rpattern = $rvalue = $rtpl = array();
@@ -337,7 +338,7 @@ function block_template($bid) {
 						if(is_array($thestyle['template']['orderplus'][$k]) && isset($thestyle['template']['orderplus'][$k][$order])) {
 							$rtpl[] = $thestyle['template']['orderplus'][$k][$order];
 						} elseif(is_array($thestyle['template']['orderplus'][$k]) && isset($thestyle['template']['orderplus'][$k]['odd']) && ($order % 2 == 1)) {
-							$rtpl[] = $thestyle['template']['order'.$k]['odd'];
+							$rtpl[] = $thestyle['template']['orderplus'][$k]['odd'];
 						} elseif(is_array($thestyle['template']['orderplus'][$k]) && isset($thestyle['template']['orderplus'][$k]['even']) && ($order % 2 == 0)) {
 							$rtpl[] = $thestyle['template']['orderplus'][$k]['even'];
 						} else {
@@ -348,8 +349,11 @@ function block_template($bid) {
 			}
 			$blockitem['fields'] = !empty($blockitem['fields']) ? $blockitem['fields'] : array();
 			$blockitem['fields'] = is_array($blockitem['fields']) ? $blockitem['fields'] : dunserialize($blockitem['fields']);
-			$blockitem['showstyle'] = !empty($blockitem['showstyle']) ? dunserialize($blockitem['showstyle']) : array();
-			$blockitem['showstyle'] = !empty($blockitem['showstyle']) ? $blockitem['showstyle'] : (!empty($blockitem['fields']['showstyle']) ? $blockitem['fields']['showstyle'] : array());
+			if(!empty($blockitem['showstyle'])) {
+				$blockitem['fields']['showstyle'] = dunserialize($blockitem['showstyle']);
+			}
+			$blockitem = $blockitem['fields'] + $blockitem;
+
 			$blockitem['picwidth'] = !empty($block['picwidth']) ? intval($block['picwidth']) : 'auto';
 			$blockitem['picheight'] = !empty($block['picheight']) ? intval($block['picheight']) : 'auto';
 			$blockitem['target'] = !empty($block['target']) ? ' target="_'.$block['target'].'"' : '';
@@ -360,7 +364,7 @@ function block_template($bid) {
 			$searcharr[] = '{parity}';
 			$replacearr[] = $blockitem['parity'];
 			foreach($fields as $key=>$field) {
-				$replacevalue = isset($blockitem[$key]) ? $blockitem[$key] : (isset($blockitem['fields'][$key]) ? $blockitem['fields'][$key] : '');
+				$replacevalue = $blockitem[$key];
 				$field['datatype'] = !empty($field['datatype']) ? $field['datatype'] : '';
 				if($field['datatype'] == 'int') {// int
 					$replacevalue = intval($replacevalue);
@@ -414,7 +418,8 @@ function block_template($bid) {
 							}
 							if($_G['block_makethumb']) {
 								C::t('common_block_item')->update($itemid, array('makethumb'=>1, 'thumbpath' => $thumbpath));
-								$thumbdata = array('bid' => $block['bid'], 'itemid' => $blockitem['itemid'], 'pic' => $thumbpath, 'picflag' => $picflag, 'type' => '0');
+								C::t('common_block')->clear_cache($block['bid']);
+								$thumbdata = array('bid' => $block['bid'], 'itemid' => $itemid, 'pic' => $thumbpath, 'picflag' => $picflag, 'type' => '0');
 								C::t('common_block_pic')->insert($thumbdata);
 							}
 						}
@@ -601,24 +606,30 @@ function block_updateitem($bid, $items=array()) {
 			$fixedvalue[$value['displayorder']][] = $value;
 			$fixedkeys[$key] = 1;
 			continue;
-		} else {
+		} elseif(!isset($oldvalue[$key])) {
 			$oldvalue[$key] = $value;
+		} else {
+			$archivelist[$value['itemid']] = 1;
 		}
 	}
 
+	$processkeys = array();
 	$itemcount = count($items);
 	for($k = 0; $k < $itemcount; $k++) {
 		$v = $items[$k];
 		$key = $v['idtype'].'_'.$v['id'];
 		if(isset($fixedkeys[$key])) {
 			$items[$k] = null;
-		} elseif(isset($oldvalue[$key])) {
+		} elseif(isset($oldvalue[$key]) && !isset($processkeys[$key])) {
 			if($oldvalue[$key]['itemtype'] == '2') {
 				$items[$k] = $oldvalue[$key];
 			} else {
 				$items[$k]['itemid'] = $oldvalue[$key]['itemid'];
 			}
 			unset($oldvalue[$key]);
+			$processkeys[$key] = 1;
+		} elseif(isset($processkeys[$key])) {
+			unset($item[$k]);
 		}
 	}
 

@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: discuz_error.php 29236 2012-03-30 05:34:47Z chenmengshu $
+ *      $Id: discuz_error.php 31845 2012-10-17 03:21:58Z zhangguosheng $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -250,19 +250,23 @@ class discuz_error
 
 
 EOT;
-		if(is_array($phpmsg) && !empty($phpmsg)) {
+		if(!empty($phpmsg)) {
 			echo '<div class="info">';
 			echo '<p><strong>PHP Debug</strong></p>';
 			echo '<table cellpadding="5" cellspacing="1" width="100%" class="table">';
 			echo '<tr class="bg2"><td>No.</td><td>File</td><td>Line</td><td>Code</td></tr>';
-			foreach($phpmsg as $k => $msg) {
-				$k++;
-				echo '<tr class="bg1">';
-				echo '<td>'.$k.'</td>';
-				echo '<td>'.$msg['file'].'</td>';
-				echo '<td>'.$msg['line'].'</td>';
-				echo '<td>'.$msg['function'].'</td>';
-				echo '</tr>';
+			if(is_array($phpmsg)) {
+				foreach($phpmsg as $k => $msg) {
+					$k++;
+					echo '<tr class="bg1">';
+					echo '<td>'.$k.'</td>';
+					echo '<td>'.$msg['file'].'</td>';
+					echo '<td>'.$msg['line'].'</td>';
+					echo '<td>'.$msg['function'].'</td>';
+					echo '</tr>';
+				}
+			} else {
+				echo '<tr><td><ul>'.$phpmsg.'</ul></td></tr>';
 			}
 			echo '</table></div>';
 		}

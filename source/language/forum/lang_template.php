@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: lang_template.php 30283 2012-05-18 05:50:47Z chenmengshu $
+ *      $Id: lang_template.php 31049 2012-07-12 02:29:45Z liulanbo $
  *
  *      This file is automatically generate
  */
@@ -1069,6 +1069,7 @@ $lang = array (
   'thread_rushreply_limit' => '本帖为抢楼帖，{$rushresult[creditlimit_title]}大于{$rushresult[creditlimit]}可以抢楼',
   'thread_rushreply_over' => '抢楼结束：',
   'thread_rushreply_rewardnum' => '个楼层已中奖',
+  'thread_rushreply_noreward' => '暂时还没有楼层中奖',
   'thread_rushreply_start' => ' 抢楼开始：',
   'thread_rushreply_statnum' => '统计参与人数',
   'usertag' => '用户标签',

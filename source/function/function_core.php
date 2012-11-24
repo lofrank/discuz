@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: function_core.php 30700 2012-06-12 10:39:22Z svn_project_zhangjie $
+ *      $Id: function_core.php 31961 2012-10-26 06:32:42Z monkey $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -362,7 +362,12 @@ function quescrypt($questionid, $answer) {
 function random($length, $numeric = 0) {
 	$seed = base_convert(md5(microtime().$_SERVER['DOCUMENT_ROOT']), 16, $numeric ? 10 : 35);
 	$seed = $numeric ? (str_replace('0', '', $seed).'012340567890') : ($seed.'zZ'.strtoupper($seed));
-	$hash = '';
+	if($numeric) {
+		$hash = '';
+	} else {
+		$hash = chr(rand(1, 26) + rand(0, 1) * 32 + 64);
+		$length--;
+	}
 	$max = strlen($seed) - 1;
 	for($i = 0; $i < $length; $i++) {
 		$hash .= $seed{mt_rand(0, $max)};
@@ -625,7 +630,7 @@ function getcurrentnav() {
 			$_GET['mod'] = 'follow';
 		}
 		foreach($_G['setting']['navmns'][$_G['basefilename']] as $navmn) {
-			if($navmn[0] == array_intersect_assoc($navmn[0], $_GET)) {
+			if($navmn[0] == array_intersect_assoc($navmn[0], $_GET) || ($navmn[0]['mod'] == 'space' && $_GET['mod'] == 'spacecp' && ($navmn[0]['do'] == $_GET['ac'] || $navmn[0]['do'] == 'album' && $_GET['ac'] == 'upload'))) {
 				$mnid = $navmn[1];
 			}
 		}
@@ -875,7 +880,7 @@ function aidencode($aid, $type = 0, $tid = 0) {
 
 function getforumimg($aid, $nocache = 0, $w = 140, $h = 140, $type = '') {
 	global $_G;
-	$key = md5($aid.'|'.$w.'|'.$h);
+	$key = dsign($aid.'|'.$w.'|'.$h);
 	return 'forum.php?mod=image&aid='.$aid.'&size='.$w.'x'.$h.'&key='.rawurlencode($key).($nocache ? '&nocache=yes' : '').($type ? '&type='.$type : '');
 }
 
@@ -1098,7 +1103,7 @@ function hookscript($script, $hscript, $type = 'funcs', $param = array(), $func 
 			foreach($hookfuncs as $hookfunc) {
 				if($hooksadminid[$hookfunc[0]]) {
 					$classkey = (HOOKTYPE != 'hookscriptmobile' ? '' : 'mobile').'plugin_'.($hookfunc[0].($hscript != 'global' ? '_'.$hscript : ''));
-					if(!class_exists($classkey)) {
+					if(!class_exists($classkey, false)) {
 						continue;
 					}
 					if(!isset($pluginclasses[$classkey])) {
@@ -1400,7 +1405,6 @@ function runlog($file, $message, $halt=0) {
 function stripsearchkey($string) {
 	$string = trim($string);
 	$string = str_replace('*', '%', addcslashes($string, '%_'));
-	$string = str_replace('_', '\_', $string);
 	return $string;
 }
 

@@ -389,16 +389,22 @@ global $_G;
 $utilService = Cloud::loadClass('Service_Util');
 $params = array(
 	's_site_gid' => $_G['groupid'],
-	'response_type' => 'js',
-	'referer' => $_SERVER['HTTP_REFERER'],
-	'from' => CURMODULE,
+	'response_type' => 'JSONP',
 );
-$signUrl = $utilService->generateSiteSignUrl($params);
-$my_search_se_url = 'http://search.discuz.qq.com/api/site/se?' . $signUrl . "";
+$params = $utilService->generateSiteSignUrl($params);
+parse_str($params, $paramArr);
+$signUrlParams = json_encode($paramArr);
+$discuz_mini_js_url = 'http://discuz.gtimg.cn/search/scripts/discuz_mini.js';
+$referer = htmlspecialchars($_SERVER['HTTP_REFERER']);
 }
 <!--{block return}-->
 	<!--{if empty($_GET['inajax'])}-->
-	<script type="text/javascript" language="utf-8" src="$my_search_se_url"></script>
+	<script type="text/javascript" charset="utf-8" src="$discuz_mini_js_url"></script>
+	<script type="text/javascript" charset="utf-8">
+		if (typeof DiscuzMini != 'undefined' && typeof DiscuzMini == 'object') {
+			DiscuzMini.showMini('$referer', $signUrlParams);
+		}
+	</script>
 	<!--{/if}-->
 <!--{/block}-->
 <!--{eval return $return;}-->

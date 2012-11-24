@@ -2,7 +2,7 @@
 	[Discuz!] (C)2001-2099 Comsenz Inc.
 	This is NOT a freeware, use is subject to license terms
 
-	$Id: portal_diy.js 29297 2012-04-01 01:59:13Z zhangguosheng $
+	$Id: portal_diy.js 31093 2012-07-16 03:54:34Z zhangguosheng $
 */
 
 var drag = new Drag();
@@ -524,7 +524,7 @@ drag.extend({
 		var tcolor = $('titleColor'+tid).value;
 		var src = $('titleSrc'+tid).value;
 		var divStyle = 'float:'+tfloat+';margin-'+tmargin_+':'+tmargin+'px;font-size:'+tsize;
-		var aStyle = 'color:'+tcolor+';';
+		var aStyle = 'color:'+tcolor+' !important;';
 		if (src) {
 			img = '<img class="vm" src="'+src+'" alt="'+ttext+'" />';
 		}

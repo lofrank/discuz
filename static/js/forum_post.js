@@ -2,9 +2,10 @@
 	[Discuz!] (C)2001-2099 Comsenz Inc.
 	This is NOT a freeware, use is subject to license terms
 
-	$Id: forum_post.js 28434 2012-02-29 11:03:43Z monkey $
+	$Id: forum_post.js 31449 2012-08-28 09:19:06Z monkey $
 */
 
+var forum_post_inited = true;
 var postSubmited = false;
 var AID = {0:1,1:1};
 var UPLOADSTATUS = -1;

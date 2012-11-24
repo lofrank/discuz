@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: function_delete.php 29479 2012-04-13 08:21:02Z zhangguosheng $
+ *      $Id: function_delete.php 32007 2012-10-30 09:59:48Z zhangjie $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -432,7 +432,7 @@ function deletethread($tids, $membercount = false, $credit = false, $ponly = fal
 	C::t('forum_typeoptionvar')->delete_by_tid($arrtids);
 	C::t('forum_poststick')->delete_by_tid($arrtids);
 	C::t('home_feed')->delete_by_id_idtype($arrtids, 'tid');
-	C::t('common_tagitem')->delete(0, $tids, 'tid');
+	C::t('common_tagitem')->delete(0, $arrtids, 'tid');
 	C::t('forum_threadrush')->delete($arrtids);
 	if($_G['setting']['plugins']['func'][HOOKTYPE]['deletethread']) {
 		hookscript('deletethread', 'global', 'funcs', array('param' => $hookparam, 'step' => 'delete'), 'deletethread');
@@ -536,10 +536,12 @@ function deleteblogs($blogids) {
 			$blogs[] = $value;
 			$newblogids[] = $value['blogid'];
 
-			if($value['uid'] != $_G['uid']) {
-				$counts[$value['uid']]['coef'] -= 1;
+			if($value['status'] == 0) {
+				if($value['uid'] != $_G['uid']) {
+					$counts[$value['uid']]['coef'] -= 1;
+				}
+				$counts[$value['uid']]['blogs'] -= 1;
 			}
-			$counts[$value['uid']]['blogs'] -= 1;
 		}
 	}
 	if(empty($blogs)) return array();
@@ -646,7 +648,12 @@ function deletedoings($ids) {
 
 	if($counts) {
 		foreach ($counts as $uid => $setarr) {
-			batchupdatecredit('doing', $uid, array('doings' => $setarr['doings']), $setarr['coef']);
+			if ($uid) {
+				batchupdatecredit('doing', $uid, array('doings' => $setarr['doings']), $setarr['coef']);
+				$lastdoing = C::t('home_doing')->fetch_all_by_uid_doid($uid, '', 'dateline', 0, 1, true, true);
+				$setarr = array('recentnote'=>$lastdoing[0]['message'], 'spacenote'=>$lastdoing[0]['message']);
+				C::t('common_member_field_home')->update($_G['uid'], $setarr);
+			}
 		}
 	}
 
@@ -735,17 +742,19 @@ function deletealbums($albumids) {
 	$sizes = $dels = $newids = $counts = array();
 	$allowmanage = checkperm('managealbum');
 
-	$value = C::t('home_album')->fetch($albumids);
-	if($value['albumid']) {
-		if($allowmanage || $value['uid'] == $_G['uid']) {
-			$dels[] = $value;
-			$newids[] = $value['albumid'];
-			if(!empty($value['pic'])) {
-				include_once libfile('function/home');
-				pic_delete($value['pic'], 'album', 0, ($value['picflag'] == 2 ? 1 : 0));
+	$albums = C::t('home_album')->fetch_all($albumids);
+	foreach($albums as $value) {
+		if($value['albumid']) {
+			if($allowmanage || $value['uid'] == $_G['uid']) {
+				$dels[] = $value;
+				$newids[] = $value['albumid'];
+				if(!empty($value['pic'])) {
+					include_once libfile('function/home');
+					pic_delete($value['pic'], 'album', 0, ($value['picflag'] == 2 ? 1 : 0));
+				}
 			}
+			$counts[$value['uid']]['albums'] -= 1;
 		}
-		$counts[$value['uid']]['albums'] -= 1;
 	}
 
 	if(empty($dels)) return array();
@@ -892,7 +901,7 @@ function deleteportaltopic($dels) {
 	$tplpermission->delete_allperm_by_tplname($targettplname);
 
 	deletedomain($dels, 'topic');
-	C::t('common_template_block')->delete_by_targettplname($targettplname, '');
+	C::t('common_template_block')->delete_by_targettplname($targettplname);
 
 	require_once libfile('function/home');
 

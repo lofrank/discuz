@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: forum_misc.php 30465 2012-05-30 04:10:03Z zhengqingpeng $
+ *      $Id: forum_misc.php 31609 2012-09-13 09:09:43Z liulanbo $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -137,7 +137,7 @@ if($_GET['action'] == 'paysucceed') {
 			if($_G['setting']['maxincperthread'] > 0) {
 				$extcredit = 'extcredits'.$_G['setting']['creditstransextra'][1];
 				$alog = C::t('common_credit_log')->count_credit_by_uid_operation_relatedid($attach['uid'], 'SAC', $aid, $_G['setting']['creditstransextra'][1]);
-				if($alog['credit'] >= $_G['setting']['maxincperthread']) {
+				if($alog >= $_G['setting']['maxincperthread']) {
 					$updateauthor = 0;
 				} else {
 					$authorEarn = min($_G['setting']['maxincperthread'] - $alog['credit'], $prices[$aid][1]);
@@ -848,7 +848,7 @@ if($_GET['action'] == 'votepoll' && submitcheck('pollsubmit', 1)) {
 		if($_G['setting']['maxincperthread'] > 0) {
 			$extcredit = 'extcredits'.$_G['setting']['creditstransextra'][1];
 			$log = C::t('common_credit_log')->count_credit_by_uid_operation_relatedid($thread['authorid'], 'STC', $_G['tid'], $_G['setting']['creditstransextra'][1]);
-			if($log['credit'] >= $_G['setting']['maxincperthread']) {
+			if($log >= $_G['setting']['maxincperthread']) {
 				$updateauthor = false;
 			} else {
 				$authorEarn = min($_G['setting']['maxincperthread'] - $log['credit'], $thread['netprice']);

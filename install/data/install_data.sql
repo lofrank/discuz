@@ -227,6 +227,7 @@ INSERT INTO pre_common_setting VALUES ('attachsave','3');
 INSERT INTO pre_common_setting VALUES ('attachurl','data/attachment');
 INSERT INTO pre_common_setting VALUES ('authkey','9f50c9zryqZt5FYA');
 INSERT INTO pre_common_setting VALUES ('authoronleft','1');
+INSERT INTO pre_common_setting VALUES ('uidlogin','0');
 INSERT INTO pre_common_setting VALUES ('autoidselect','0');
 INSERT INTO pre_common_setting VALUES ('avatarmethod','0');
 INSERT INTO pre_common_setting VALUES ('backupdir','f027b6');
@@ -437,7 +438,7 @@ INSERT INTO pre_common_setting VALUES ('search', 'a:6:{s:6:\"portal\";a:4:{s:6:\
 INSERT INTO pre_common_setting VALUES ('sphinxon', '');
 INSERT INTO pre_common_setting VALUES ('sphinxhost', '');
 INSERT INTO pre_common_setting VALUES ('sphinxport', '');
-INSERT INTO pre_common_setting VALUES ('sphinxsubindex', 'threads,threads_mintue');
+INSERT INTO pre_common_setting VALUES ('sphinxsubindex', 'threads,threads_minute');
 INSERT INTO pre_common_setting VALUES ('sphinxmsgindex', 'posts,posts_minute');
 INSERT INTO pre_common_setting VALUES ('sphinxmaxquerytime', '');
 INSERT INTO pre_common_setting VALUES ('sphinxlimit', '');

@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: discuz_upgrade.php 30700 2012-06-12 10:39:22Z svn_project_zhangjie $
+ *      $Id: discuz_upgrade.php 31992 2012-10-30 05:44:15Z zhangjie $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -170,7 +170,7 @@ class discuz_upgrade {
 		if(!$fp) {
 			return 0;
 		}
-		$response = dfsockopen($this->upgradeurl.$upgradeinfo['latestversion'].'/'.$upgradeinfo['latestrelease'].'/'.$this->locale.'_'.$this->charset.'/'.$folder.'/'.$file.'sc', $offset, '', '', FALSE, '', 15, TRUE, 'URLENCODE', FALSE, $position);
+		$response = dfsockopen($this->upgradeurl.$upgradeinfo['latestversion'].'/'.$upgradeinfo['latestrelease'].'/'.$this->locale.'_'.$this->charset.'/'.$folder.'/'.$file.'sc', $offset, '', '', FALSE, '', 120, TRUE, 'URLENCODE', FALSE, $position);
 		if($response) {
 			if($offset && strlen($response) == $offset) {
 				$downloadfileflag = false;

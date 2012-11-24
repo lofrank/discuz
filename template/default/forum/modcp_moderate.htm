@@ -120,7 +120,7 @@
 								<a href="javascript:;" onclick="toggle_post($post[id]);" class="xi2">{lang open}</a>
 							</span>
 							<input type="checkbox" name="moderate[]" id="pidcheck_{$post[id]}" class="pc" value="$post[id]" onclick="recountobj()"/>
-							<a href="forum.php?mod=forumdisplay&fid={$post[fid]}" target="_blank" class="xi2 xw1">{$modforums[list][$post[fid]]}</a> &rsaquo; <span class="xw1">$post[tsubject]</span><!--{if $post[subject] && !$post[first]}-->&rsaquo; <span class="xw1">$post[subject]</span><!--{/if}-->
+							<a href="forum.php?mod=forumdisplay&fid={$post[fid]}" target="_blank" class="xi2 xw1">{$modforums[list][$post[fid]]}</a><!--{if !empty($post[tsubject])}--> &rsaquo; <span class="xw1">$post[tsubject]</span><!--{/if}--><!--{if $post[subject] && !$post[first]}--> &rsaquo; <span class="xw1">$post[subject]</span><!--{/if}-->
 						</p>
 						<p class="pbn">
 							<span class="xi2">$post[author]</span>

@@ -2,7 +2,7 @@
 	[Discuz!] (C)2001-2099 Comsenz Inc.
 	This is NOT a freeware, use is subject to license terms
 
-	$Id: register.js 27312 2012-01-16 02:39:24Z monkey $
+	$Id: register.js 31582 2012-09-11 03:21:49Z zhangjie $
 */
 
 var lastusername = '', lastpassword = '', lastemail = '', lastinvitecode = '', stmp = new Array();
@@ -230,6 +230,7 @@ function emailMenu(e, id) {
 		menu.id = 'emailmore_menu';
 		menu.style.display = 'none';
 		menu.className = 'p_pop';
+		menu.setAttribute('disautofocus', true);
 		$('append_parent').appendChild(menu);
 	}
 	var s = '<ul>';
@@ -271,7 +272,7 @@ function checkusername(id) {
 	}
 	var x = new Ajax();
 	$('tip_' + id).parentNode.className = $('tip_' + id).parentNode.className.replace(/ p_right/, '');
-	x.get('forum.php?mod=ajax&inajax=yes&infloat=register&handlekey=register&ajaxmenu=1&action=checkusername&username=' + (BROWSER.ie && document.charset == 'utf-8' ? encodeURIComponent(username) : username), function(s) {
+	x.get('forum.php?mod=ajax&inajax=yes&infloat=register&handlekey=register&ajaxmenu=1&action=checkusername&username=' + (BROWSER.ie && document.charset == 'utf-8' ? encodeURIComponent(username) : username.replace(/%/g, '%25')), function(s) {
 		errormessage(id, s);
 	});
 }

@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: lang_message.php 30846 2012-06-25 10:17:09Z zhangjie $
+ *      $Id: lang_message.php 31615 2012-09-14 03:23:25Z zhangjie $
  *
  *      This file is automatically generate
  */
@@ -997,6 +997,7 @@ $lang = array (
   'location_login' => '',
   'location_login_succeed_mobile' => '欢迎您回来，{username}。点击进入登录前页面',
   'location_login_succeed' => '',
+  'location_activation' => '您的帐号处于未激活状态，点击进行激活',
   'login_succeed_inactive_member' => '欢迎您回来，{usergroup} {username}。您的帐号处于非激活状态，现在将转入控制面板',
   'login_question_empty' => '请选择安全提问以及填写正确的答案',
   'login_question_invalid' => '抱歉，安全提问答案填写错误',

@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: discuz_session.php 27555 2012-02-06 02:48:49Z zhangguosheng $
+ *      $Id: discuz_session.php 31499 2012-09-03 09:57:13Z zhangguosheng $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -186,7 +186,18 @@ class discuz_session {
 			$oltimespan = $_G['setting']['oltimespan'];
 			$lastolupdate = C::app()->session->var['lastolupdate'];
 			if($_G['uid'] && $oltimespan && TIMESTAMP - ($lastolupdate ? $lastolupdate : $ulastactivity) > $oltimespan * 60) {
-				if(!C::t('common_onlinetime')->update_onlinetime($_G['uid'], $oltimespan, $oltimespan, TIMESTAMP)) {
+				$isinsert = false;
+				if(C::app()->session->isnew) {
+					$oldata = C::t('common_onlinetime')->fetch($_G['uid']);
+					if(empty($oldata)) {
+						$isinsert = true;
+					} else if(TIMESTAMP - $oldata['lastupdate'] > $oltimespan * 60) {
+						C::t('common_onlinetime')->update_onlinetime($_G['uid'], $oltimespan, $oltimespan, TIMESTAMP);
+					}
+				} else {
+					$isinsert = !C::t('common_onlinetime')->update_onlinetime($_G['uid'], $oltimespan, $oltimespan, TIMESTAMP);
+				}
+				if($isinsert) {
 					C::t('common_onlinetime')->insert(array(
 						'uid' => $_G['uid'],
 						'thismonth' => $oltimespan,

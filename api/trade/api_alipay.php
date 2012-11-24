@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: api_alipay.php 30091 2012-05-10 03:26:33Z zhengqingpeng $
+ *      $Id: api_alipay.php 31606 2012-09-13 07:26:35Z monkey $
  */
 
 define('IN_API', true);
@@ -31,7 +31,7 @@ function credit_payurl($price, &$orderid) {
 
 	$args = array(
 		'subject' 		=> $_G['setting']['bbname'].' - '.$_G['member']['username'].' - '.lang('forum/misc', 'credit_payment'),
-		'body' 			=> lang('forum/misc', 'credit_forum_payment').' '.$_G['setting']['extcredits'][$_G['setting']['creditstrans']]['title'].' '.intval($price * $_G['setting']['ec_ratio']).' '.$_G['setting']['extcredits'][$_G['setting']['creditstrans']]['unit'].' ('.$_G['clientip'].')',
+		'body' 			=> lang('forum/misc', 'credit_forum_payment').' '.$_G['setting']['extcredits'][$_G['setting']['creditstrans']]['title'].' '.intval($price * $_G['setting']['ec_ratio']).' '.$_G['setting']['extcredits'][$_G['setting']['creditstrans']]['unit'],
 		'service' 		=> 'trade_create_by_buyer',
 		'partner' 		=> DISCUZ_PARTNER,
 		'notify_url' 		=> $_G['siteurl'].'api/trade/notify_credit.php',
@@ -63,7 +63,7 @@ function invite_payurl($amount, $price, &$orderid) {
 
 	$args = array(
 		'subject' 		=> $_G['setting']['bbname'].' - '.lang('forum/misc', 'invite_payment'),
-		'body' 			=> lang('forum/misc', 'invite_forum_payment').'_'.intval($amount).'_'.lang('forum/misc', 'invite_forum_payment_unit').'_('.$_G['clientip'].')',
+		'body' 			=> lang('forum/misc', 'invite_forum_payment').' '.intval($amount).' '.lang('forum/misc', 'invite_forum_payment_unit'),
 		'service' 		=> 'trade_create_by_buyer',
 		'partner' 		=> DISCUZ_PARTNER,
 		'notify_url' 		=> $_G['siteurl'].'api/trade/notify_invite.php',

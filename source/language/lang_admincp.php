@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: lang_admincp.php 30893 2012-06-29 02:57:06Z zhangguosheng $
+ *      $Id: lang_admincp.php 32012 2012-10-31 02:20:31Z chenmengshu $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -574,6 +574,7 @@ $lang = array
 	'founder_upgrade_manually' => '手动下载',
 	'founder_upgrade_select_version' => '检测到有新的版本可供升级，您可以选择自动升级或者下载安装包手动升级。',
 	'founder_upgrade_continue' => '继续升级',
+	'founder_upgrade_recheck' => '重新检测',
 	'founder_upgrade_dbupdate' => '升级数据库',
 	'upgrade_right_now' => '您目前使用的 Discuz! 程序有新版本发布，请及时升级<span>在线升级</span>',
 
@@ -1584,8 +1585,10 @@ $lang = array
 	'setting_functions_other' => '其他',
 	'setting_functions_other_pwdsafety' => '启用登录密码加密',
 	'setting_functions_other_pwdsafety_comment' => '选择“是”，站点登录时的密码将进行加密后再传输',
+	'setting_functions_other_uidlogin' => '启用UID登录',
+	'setting_functions_other_uidlogin_comment' => '选择“是”，站点登录时允许通过 UID的方式登录验证',
 	'setting_functions_other_autoidselect' => '启用登录自动选择帐号',
-	'setting_functions_other_autoidselect_comment' => '选择“是”，站点登录时的将自动按 UID、E-mail、用户名的顺序逐一去匹配',
+	'setting_functions_other_autoidselect_comment' => '选择“是”，站点登录时的将自动按 UID、E-mail、用户名的顺序逐一去匹配，其中UID验证只有UID登录方式被启用后才有效',
 	'setting_functions_other_rssstatus' => '<span class="spectitle">启用 RSS</span>',
 	'setting_functions_other_rssstatus_comment' => '选择“是”，将允许用户使用 RSS 客户端软件接收最新的帖子、文章更新。注意: 在分类很多的情况下，本功能可能会加重服务器负担',
 	'setting_functions_other_rssttl' => '<span class="spectitle">RSS TTL(分钟)</span>',
@@ -2169,9 +2172,9 @@ $lang = array
 	'settings_sphinx_sphinxport' => '设置 Sphinx 主机端口',
 	'settings_sphinx_sphinxport_comment' => '填写 Sphinx 主机端口：例如，3312，主机名填写 socket 地址的，则此处不需要设置',
 	'settings_sphinx_sphinxsubindex' => '设置标题索引名',
-	'settings_sphinx_sphinxsubindex_comment' => '填写 Sphinx 配置中的标题主索引名及标题增量索引名：例如，“threads,threads_mintue”。<br />注意：多个索引使用半角逗号 "," 隔开，必须按照 Sphinx 配置文件中的索引名填写',
+	'settings_sphinx_sphinxsubindex_comment' => '填写 Sphinx 配置中的标题主索引名及标题增量索引名：例如，“threads,threads_minute”。<br />注意：多个索引使用半角逗号 "," 隔开，必须按照 Sphinx 配置文件中的索引名填写',
 	'settings_sphinx_sphinxmsgindex' => '设置全文索引名',
-	'settings_sphinx_sphinxmsgindex_comment' => '填写 Sphinx 配置中的全文主索引名及全文增量索引名：例如，“posts,posts_mintue”。<br />注意：多个索引使用半角逗号 "," 隔开，必须按照 Sphinx 配置文件中的索引名填写',
+	'settings_sphinx_sphinxmsgindex_comment' => '填写 Sphinx 配置中的全文主索引名及全文增量索引名：例如，“posts,posts_minute”。<br />注意：多个索引使用半角逗号 "," 隔开，必须按照 Sphinx 配置文件中的索引名填写',
 	'settings_sphinx_sphinxmaxquerytime' => '设置最大搜索时间',
 	'settings_sphinx_sphinxmaxquerytime_comment' => '填写最大搜索时间，以毫秒为单位。参数必须是非负整数。默认值为 0，意思是不做限制',
 	'settings_sphinx_sphinxlimit' => '设置最大返回匹配项数目',
@@ -2530,7 +2533,7 @@ $lang = array
 	'forums_edit_posts_attach_ext' => '允许附件类型(小写)',
 	'forums_edit_posts_attach_ext_comment' => '设置允许上传的附件扩展名，多个扩展名之间用半角逗号 "," 隔开。本设置的优先级高于用户组，留空为按照用户组允许的附件类型设定',
 	'forums_edit_posts_allowfeed' => '允许发送广播和动态',
-	'forums_edit_posts_allowfeed_comment' => '开启后默认允许用户发送广播和动态，广播是否发送用户可以在发帖时去掉，<strong>隐私版块建议设为否</strong>。',
+	'forums_edit_posts_allowfeed_comment' => '开启后默认允许用户发送广播和动态，同时用户也可以选择不发送，<strong>隐私版块建议设为否</strong>。如果关闭广播功能，该设置将无效。',
 	'forums_edit_posts_commentitem' => '普通主题点评预置观点',
 	'forums_edit_posts_commentitem_comment' => '每个观点一行。如存在空行，空行下方的内容将显示在下拉菜单中作为备选观点。只有开启帖子点评功能后本设置才生效，如留空表示使用全局的“普通主题点评预置观点”设置',
 
@@ -3018,6 +3021,7 @@ $lang = array
 	'members_delete_pic' => '图片',
 	'members_delete_doing' => '记录',
 	'members_delete_share' => '分享',
+	'members_delete_feed' => '广播',
 	'members_delete_comment' => '评论',
 	'members_delete_allitem' => '全部',
 	'members_delete_user_processing_next' => '已处理 {deletestart}至{nextdeletestart} 名用户，继续进行...',
@@ -5167,7 +5171,7 @@ $lang = array
 	'ec_alipay_account' => '收款支付宝账号',
 	'ec_alipay_account_comment' => '如果开启兑换或交易功能，请填写真实有效的支付宝账号，用于收取用户以现金兑换交易积分的相关款项。如账号无效或安全码有误，将导致用户支付后无法正确对其积分账户自动充值，或进行正常的交易对其积分账户自动充值，或进行正常的交易。<br />如您没有支付宝帐号，<a href="http://www.alipay.com/redir.do?id=307&site=allbbs&target=https%3A%2F%2Fwww.alipay.com%2Fuser%2Fuser_register.htm" target="_blank">请点击这里注册</a>',
 	'ec_alipay_check' => '支付测试',
-	'ec_alipay_check_comment' => '本测试将模拟提交 1 元人民币的订单进行测试，如果提交后成功出现付款界面，说明您站点的支付宝功能可以正常使用',
+	'ec_alipay_check_comment' => '本测试将模拟提交 0.01 元人民币的订单进行测试，如果提交后成功出现付款界面，说明您站点的支付宝功能可以正常使用',
 	'ec_alipay_check_virtualgoodssubject' => '测试虚拟商品',
 	'ec_alipay_check_goodssubject' => '测试实物商品',
 	'ec_alipay_checklink_credit' => '积分充值订单测试',

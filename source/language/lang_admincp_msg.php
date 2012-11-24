@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: lang_admincp_msg.php 30741 2012-06-15 08:53:29Z monkey $
+ *      $Id: lang_admincp_msg.php 32011 2012-10-31 02:20:10Z monkey $
  *
  *      This file is automatically generate
  */
@@ -224,6 +224,7 @@ $lang = array (
 
   'setting_domain_repeat_error' => '配置中存在重复的域名',
   'setting_domain_need_default_error' => '请设置默认域名',
+  'only_two_names_from_english_composition_and_figures' => '抱歉，您设置的二级域名只能含有英文和数字',
 
   'alipay_not_contract' => '请输入支付宝签约用户信息',
   'alipay_succeed' => '支付宝功能设定成功 ',
@@ -396,7 +397,8 @@ $lang = array (
   'plugins_import_version_invalid' => '本插件适用于 Discuz! {cur_version} 与当前版本({set_version})不一致',
   'plugins_import_succeed' => '插件数据导入成功！<br />为了正常使用此插件，您可能还需要上传或修改相应的文件或模板，详情请查看本插件的安装说明',
   'plugins_config_upgrade_confirm' => '您确定要把 {pluginname} {version} 插件更新到 {toversion} 吗？',
-  'plugins_config_upgrade_missed' => '此插件已更新到最新版本<br /><br /><a href="http://addon.discuz.com?view=plugins">点击这里返回应用中心</a><br />',
+  'plugins_config_upgrade_missed' => '此插件已更新到最新版本</h4><br /><a href="http://addon.discuz.com?view=plugins" class="lightlink">点击这里进入应用中心</a><br /><br /><h4>',
+  'plugins_config_upgrade_new' => '此插件已更新到最新版本<br />但是发现此插件在应用中心存在新版本 {newver}，是否需要升级？</h4><br /><a href="http://addon.discuz.com?@{addonid}" class="lightlink">升级此插件</a> &nbsp;&nbsp; <a href="{ADMINSCRIPT}?action=plugins" class="lightlink">暂不升级</a><h4>',
   'plugins_upgrade_var_invalid' => '插件的嵌入点名称不合法，无法更新',
   'plugins_setting_succeed' => '插件参数设置更新成功 ',
   'plugins_setting_module_nonexistence' => '指定的插件管理模块文件({modfile})不存在或存在语法错误，请检查是否已将插件完整上传',

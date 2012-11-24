@@ -201,12 +201,12 @@
 											<script type="text/javascript" reload="1">
 											var imgk = new Array();
 											<!--{loop $imgattach $imginfo}-->
-												<!--{eval $a = '\"\'\t\\""\\\''."\\\\";$k = $imginfo['aid'].'&size=120x80&key='.rawurlencode(md5($imginfo['aid'].'|120|80')).'&nocache=yes';}-->
+												<!--{eval $a = '\"\'\t\\""\\\''."\\\\";$k = getforumimg($imginfo['aid'], 1, 120, 80);}-->
 												imgk[{$imginfo[aid]}] = '$k';
 											<!--{/loop}-->
 											function updateimginfo(aid) {
 												if(aid) {
-													$('selectimg').src='forum.php?mod=image&aid=' + imgk[aid];
+													$('selectimg').src=imgk[aid];
 												} else {
 													$('selectimg').src='{STATICURL}image/common/none.gif';
 												}

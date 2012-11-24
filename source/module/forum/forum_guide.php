@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: forum_guide.php 29108 2012-03-27 02:46:40Z chenmengshu $
+ *      $Id: forum_guide.php 31990 2012-10-30 05:32:09Z liulanbo $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -154,7 +154,7 @@ function get_guide_list($view, $start = 0, $num = 50, $again = 0) {
 
 		$tids = array();
 		foreach($_G['cache']['forums'] as $fid => $forum) {
-			if($forum['type'] != 'group' && $forum['status'] > 0 && (!$forum['viewperm'] && $_G['group']['readaccess']) || ($forum['viewperm'] && forumperm($forum['viewperm']))) {
+			if($forum['type'] != 'group' && $forum['status'] > 0 && !$forum['viewperm'] && !$forum['havepassword']) {
 				$fids[] = $fid;
 			}
 		}

@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: table_forum_thread.php 29242 2012-03-30 08:02:01Z chenmengshu $
+ *      $Id: table_forum_thread.php 32004 2012-10-30 09:02:57Z zhengqingpeng $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -189,7 +189,7 @@ class table_forum_thread extends discuz_table
 	public function fetch_all_by_tid_displayorder($tids, $displayorder = null, $glue = '>=', $fids = array(), $closed = null) {
 		$data = array();
 		if(!empty($tids)) {
-			$data = $this->fetch_all_by_tid($tids);
+			$data = $this->fetch_all_by_tid((array)$tids);
 			$fids = $fids && !is_array($fids) ? array($fids) : $fids;
 			foreach($data as $tid => $value) {
 				if($displayorder !== null && !(helper_util::compute($value['displayorder'], $displayorder, $glue))) {
@@ -494,7 +494,7 @@ class table_forum_thread extends discuz_table
 				}
 			}
 		}
-		if($defult && $conditions['sticky'] == 4 && $start == 0 && $limit && strtolower(preg_replace("/\s?/ies", '', $order)) == 'displayorderdesc,lastpostdesc' && empty($sort)) {
+		if(!defined('IN_MOBILE') && $defult && $conditions['sticky'] == 4 && $start == 0 && $limit && strtolower(preg_replace("/\s?/ies", '', $order)) == 'displayorderdesc,lastpostdesc' && empty($sort)) {
 			foreach($conditions['displayorder'] as $id) {
 				if($id < 2) {
 					$firstpage = true;

@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: lang_blockclass.php 28619 2012-03-06 08:40:56Z chenmengshu $
+ *      $Id: lang_blockclass.php 31069 2012-07-12 09:13:58Z zhangguosheng $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -56,7 +56,6 @@ $lang = array(
 	'blockclass_thread_field_avatar' => '楼主头像',
 	'blockclass_thread_field_avatar_middle' => '楼主头像(中)',
 	'blockclass_thread_field_avatar_big' => '楼主头像(大)',
-	'blockclass_thread_field_icon' => '帖子图标',
 	'blockclass_thread_field_forumurl' => '版块URL',
 	'blockclass_thread_field_forumname' => '版块名称',
 	'blockclass_thread_field_typename' => '主题分类名称',

@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: modcp_moderate.php 30465 2012-05-30 04:10:03Z zhengqingpeng $
+ *      $Id: modcp_moderate.php 31513 2012-09-04 08:47:57Z zhangguosheng $
  */
 
 if(!defined('IN_DISCUZ') || !defined('IN_MODCP')) {
@@ -356,7 +356,9 @@ if($op == 'replies') {
 	if($modcount) {
 
 		$attachtablearr = array();
-		foreach(C::t('common_moderate')->fetch_all_by_search_for_post($posttable, $moderatestatus, 0, ($modfids ? explode(',', $modfids) : null), null, null, null, null, $start_limit, $ppp) as $post) {
+		$_fids = array();
+		foreach(C::t('common_moderate')->fetch_all_by_search_for_post($posttable, $moderatestatus, 0, ($modfids ? explode(',', $modfids) : null), null, null, null, $start_limit, $ppp) as $post) {
+			$_fids[$_post['fid']] = $post['fid'];
 			$post['id'] = $post['pid'];
 			$post['dateline'] = dgmdate($post['dateline']);
 			$post['subject'] = $post['subject'] ? '<b>'.$post['subject'].'</b>' : '<i>'.lang('admincp', 'nosubject').'</i>';
@@ -367,6 +369,21 @@ if($op == 'replies') {
 				$attachtablearr[$attachtable][$post['pid']] = $post['pid'];
 			}
 			$postlist[$post['pid']] = $post;
+		}
+		$_forums = array();
+		if($_fids) {
+			$_forums = C::t('forum_forum')->fetch_all($_fids);
+			foreach($postlist as &$_post) {
+				$_forum = $_forums[$_post['fid']];
+				$_arr = array(
+					'forumname' => $_forum['name'],
+					'allowsmilies' => $_forum['allowsmilies'],
+					'allowhtml' => $_forum['allowhtml'],
+					'allowbbcode' => $_forum['allowbbcode'],
+					'allowimgcode' => $_forum['allowimgcode'],
+				);
+				$_post = array_merge($_post, $_arr);
+			}
 		}
 
 		if(!empty($attachtablearr)) {

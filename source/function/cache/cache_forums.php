@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: cache_forums.php 28876 2012-03-16 04:43:25Z monkey $
+ *      $Id: cache_forums.php 31990 2012-10-30 05:32:09Z liulanbo $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -19,7 +19,7 @@ function build_cache_forums() {
 
 	$forumnoperms = array();
 	foreach($forums as $val) {
-		$forum = array('fid' => $val['fid'], 'type' => $val['type'], 'name' => $val['name'], 'fup' => $val['fup'], 'simple' => $val['simple'], 'status' => $val['status'], 'allowpostspecial' => $val['allowpostspecial'], 'viewperm' => $val['viewperm'], 'formulaperm' => $val['formulaperm'], 'viewperm' => $val['viewperm'], 'postperm' => $val['postperm'], 'replyperm' => $val['replyperm'], 'getattachperm' => $val['getattachperm'], 'postattachperm' => $val['postattachperm'], 'extra' => $val['extra'], 'commentitem' => $val['commentitem'], 'uid' => $val['uid'], 'archive' => $val['archive']);
+		$forum = array('fid' => $val['fid'], 'type' => $val['type'], 'name' => $val['name'], 'fup' => $val['fup'], 'simple' => $val['simple'], 'status' => $val['status'], 'allowpostspecial' => $val['allowpostspecial'], 'viewperm' => $val['viewperm'], 'formulaperm' => $val['formulaperm'], 'havepassword' => $val['password'], 'postperm' => $val['postperm'], 'replyperm' => $val['replyperm'], 'getattachperm' => $val['getattachperm'], 'postattachperm' => $val['postattachperm'], 'extra' => $val['extra'], 'commentitem' => $val['commentitem'], 'uid' => $val['uid'], 'archive' => $val['archive'], 'domain' => $val['domain']);
 		$forum['orderby'] = bindec((($forum['simple'] & 128) ? 1 : 0).(($forum['simple'] & 64) ? 1 : 0));
 		$forum['ascdesc'] = ($forum['simple'] & 32) ? 'ASC' : 'DESC';
 		$forum['extra'] = unserialize($forum['extra']);
@@ -68,7 +68,7 @@ function build_cache_forums() {
 
 function formatforumdata($forum, &$pluginvalue) {
 	static $keys = array('fid', 'type', 'name', 'fup', 'viewperm', 'postperm', 'orderby', 'ascdesc', 'users', 'status',
-		'extra', 'plugin', 'allowpostspecial', 'commentitem', 'archive');
+		'extra', 'plugin', 'allowpostspecial', 'commentitem', 'archive', 'domain', 'havepassword');
 	static $orders = array('lastpost', 'dateline', 'replies', 'views');
 
 	$data = array();
@@ -76,6 +76,7 @@ function formatforumdata($forum, &$pluginvalue) {
 		switch ($key) {
 			case 'orderby': $data[$key] = $orders[$forum['orderby']]; break;
 			case 'plugin': $data[$key] = $pluginvalue[$forum['fid']]; break;
+			case 'havepassword': $data[$key] = $forum[$key] ? 1 : 0; break;
 			case 'allowpostspecial': $data[$key] = sprintf('%06b', $forum['allowpostspecial']); break;
 			default: $data[$key] = $forum[$key];
 		}

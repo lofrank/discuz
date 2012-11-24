@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: function_filesock.php 30700 2012-06-12 10:39:22Z svn_project_zhangjie $
+ *      $Id: function_filesock.php 31992 2012-10-30 05:44:15Z zhangjie $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -103,7 +103,13 @@ function _dfsockopen($url, $limit = 0, $post = '', $cookie = '', $bysocket = FAL
 			}
 
 			if($position) {
-				fseek($fp, $position, SEEK_CUR);
+				for($i=0; $i<$position; $i++) {
+					$char = fgetc($fp);
+					if($char == "\n" && $oldchar != "\r") {
+						$i++;
+					}
+					$oldchar = $char;
+				}
 			}
 
 			if($limit) {

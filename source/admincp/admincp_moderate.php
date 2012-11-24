@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: admincp_moderate.php 25246 2011-11-02 03:34:53Z zhangguosheng $
+ *      $Id: admincp_moderate.php 31857 2012-10-17 07:23:56Z monkey $
  */
 
 if(!defined('IN_DISCUZ') || !defined('IN_ADMINCP')) {
@@ -37,7 +37,6 @@ if($operation == 'members') {
 
 	$modfid = !empty($modfid) ? intval($modfid) : 0;
 
-	$fids = 0;
 	$recyclebins = $forumlist = array();
 
 	$query = C::t('forum_forum')->fetch_all_valid_forum();
@@ -47,9 +46,9 @@ if($operation == 'members') {
 	}
 
 	if($modfid && $modfid != '-1') {
-		$fidadd = array('fids' => "fid='$modfid'", 'and' => ' AND ', 't' => 't.', 'p' => 'p.');
+		$fidadd = array('fids' => $modfid, 'and' => ' AND ', 't' => 't.', 'p' => 'p.');
 	} else {
-		$fidadd = $fids ? array('fids' => "fid IN ($fids)", 'and' => ' AND ', 't' => 't.', 'p' => 'p.') : array();
+		$fidadd = array();
 	}
 
 	if(isset($filter) && $filter == 'ignore') {

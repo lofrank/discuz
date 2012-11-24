@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: admincp_upgrade.php 30700 2012-06-12 10:39:22Z svn_project_zhangjie $
+ *      $Id: admincp_upgrade.php 31966 2012-10-26 08:47:20Z zhangjie $
  */
 
 if(!defined('IN_DISCUZ') || !defined('IN_ADMINCP')) {
@@ -313,6 +313,7 @@ if($operation == 'patch' || $operation == 'cross') {
 			if(!empty($upgrade_step['cachevalue']['step'])) {
 				$theurl = 'upgrade&operation='.$upgrade_step['cachevalue']['operation'].'&version='.$upgrade_step['cachevalue']['version'].'&locale='.$upgrade_step['cachevalue']['locale'].'&charset='.$upgrade_step['cachevalue']['charset'].'&release='.$upgrade_step['cachevalue']['release'];
 				$steplang = array('', cplang('founder_upgrade_updatelist'), cplang('founder_upgrade_download'), cplang('founder_upgrade_compare'), cplang('founder_upgrade_upgrading'), cplang('founder_upgrade_complete'), 'dbupdate' => cplang('founder_upgrade_dbupdate'));
+				$recheckurl = ADMINSCRIPT.'?action=upgrade&operation=recheck';
 				if($upgrade_step['cachevalue']['step'] == 'dbupdate') {
 					$dbreturnurl = $_G['siteurl'].ADMINSCRIPT.'?action='.$theurl.'&step=5';
 					$stepurl =  $_G['siteurl'].'install/update.php?step=prepare&from='.rawurlencode($dbreturnurl).'&frommd5='.rawurlencode(md5($dbreturnurl.$_G['config']['security']['authkey']));
@@ -320,7 +321,7 @@ if($operation == 'patch' || $operation == 'cross') {
 						'',
 						'',
 						array('step' => $steplang['dbupdate']),
-						'<br /><input type="button" class="btn" onclick="window.location.href=\''.$stepurl.'\'" value="'.$lang['founder_upgrade_continue'].'" /><br /><br />'
+						'<br /><input type="button" class="btn" onclick="window.location.href=\''.$stepurl.'\'" value="'.$lang['founder_upgrade_continue'].'" />&nbsp;&nbsp;&nbsp;&nbsp;<input type="button" class="btn" onclick="window.location.href=\''.$recheckurl.'\'" value="'.$lang['founder_upgrade_recheck'].'" /><br /><br />'
 					);
 				} else {
 					$stepurl =  ADMINSCRIPT.'?action='.$theurl.'&step='.$upgrade_step['cachevalue']['step'];
@@ -328,7 +329,7 @@ if($operation == 'patch' || $operation == 'cross') {
 						'',
 						'',
 						array('step' => $steplang[$upgrade_step['cachevalue']['step']]),
-						'<br /><input type="button" class="btn" onclick="window.location.href=\''.$stepurl.'\'" value="'.$lang['founder_upgrade_continue'].'" /><br /><br />'
+						'<br /><input type="button" class="btn" onclick="window.location.href=\''.$stepurl.'\'" value="'.$lang['founder_upgrade_continue'].'" />&nbsp;&nbsp;&nbsp;&nbsp;<input type="button" class="btn" onclick="window.location.href=\''.$recheckurl.'\'" value="'.$lang['founder_upgrade_recheck'].'" /><br /><br />'
 					);
 				}
 			}
@@ -397,5 +398,19 @@ if($operation == 'patch' || $operation == 'cross') {
 		}
 	}
 	showtablefooter();
+} elseif($operation == 'recheck') {
+
+	$upgrade_step = C::t('common_cache')->fetch('upgrade_step');
+	$upgrade_step = dunserialize($upgrade_step['cachevalue']);
+	$file = DISCUZ_ROOT.'./data/update/Discuz! X'.$upgrade_step['version'].' Release['.$upgrade_step['release'].']/updatelist.tmp';
+	@unlink($file);
+	@unlink(DISCUZ_ROOT.'./install/update.php');
+	C::t('common_cache')->delete('upgrade_step');
+	C::t('common_cache')->delete('upgrade_run');
+	C::t('common_setting')->update('upgrade', '');
+	updatecache('setting');
+	$old_update_dir = './data/update/';
+	$discuz_upgrade->rmdirs(DISCUZ_ROOT.$old_update_dir);
+	dheader('Location: '.ADMINSCRIPT.'?action=upgrade');
 }
 ?>

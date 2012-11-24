@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms'
  *
- *      $Id: admincp_plugins.php 30036 2012-05-08 02:31:38Z monkey $
+ *      $Id: admincp_plugins.php 32011 2012-10-31 02:20:10Z monkey $
  */
 
 if(!defined('IN_DISCUZ') || !defined('IN_ADMINCP')) {
@@ -157,8 +157,8 @@ if(!$operation) {
 						$newlist .= showtablerow('class="hover"', array('style="width:45px"', 'class="light" valign="top" style="width:200px"', 'valign="bottom"', 'align="right" valign="bottom" style="width:160px"'), array(
 							'<img src="'.cloudaddons_pluginlogo_url($entry).'" onerror="this.src=\'static/image/admincp/plugin_logo.png\';this.onerror=null" width="40" height="40" align="left" style="margin-right:5px" />',
 							$entrytitle.' '.$entryversion.($filemtime > TIMESTAMP - 86400 ? ' <font color="red">New!</font>' : '').'</span><br /><span class="sml light">'.$entry.'</span>',
-							'<span class="light">'.cplang('author').': <a href="'.ADMINSCRIPT.'?action=cloudaddons&id='.$plugin['identifier'].'.plugin" target="_blank">'.$entrycopyright.'</a></span>'.
-							'<div class="psetting light"><a href="'.ADMINSCRIPT.'?action=cloudaddons&id='.$plugin['identifier'].'.plugin" target="_blank" title="'.$lang['cloudaddons_linkto'].'">'.$lang['view'].'</a></div>',
+							'<span class="light">'.cplang('author').': '.$entrycopyright.'</span>'.
+							'<div class="psetting light"><a href="'.ADMINSCRIPT.'?action=cloudaddons&id='.$entry.'.plugin" target="_blank" title="'.$lang['cloudaddons_linkto'].'">'.$lang['view'].'</a></div>',
 							'<a href="'.ADMINSCRIPT.'?action=plugins&operation=import&dir='.$entry.'" class="bold">'.$lang['plugins_config_install'].'</a>'
 						), true);
 					}
@@ -524,9 +524,19 @@ if(!$operation) {
 
 		} else {
 
+			$addonid = $plugin['identifier'].'.plugin';
+			$checkresult = dunserialize(cloudaddons_upgradecheck(array($addonid)));
+
+			list($return, $newver) = explode(':', $checkresult[$addonid]);
+
 			cloudaddons_installlog($pluginarray['plugin']['identifier'].'.plugin');
 			dsetcookie('addoncheck_plugin', '', -1);
-			cpmsg('plugins_config_upgrade_missed', 'action=plugins', 'succeed');
+
+			if($newver) {
+				cpmsg('plugins_config_upgrade_new', '', 'succeed', array('newver' => $newver, 'addonid' => $addonid));
+			} else {
+				cpmsg('plugins_config_upgrade_missed', 'action=plugins', 'succeed');
+			}
 
 		}
 

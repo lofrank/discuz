@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: spacecp_credit_base.php 28214 2012-02-24 06:38:56Z zhengqingpeng $
+ *      $Id: spacecp_credit_base.php 31670 2012-09-20 03:20:56Z zhengqingpeng $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -80,7 +80,7 @@ if($_GET['op'] == 'base') {
 	}
 
 	if(submitcheck('addfundssubmit')) {
-		$apitype = $_GET['apitype'];
+		$apitype = is_numeric($_GET['bank_type']) ? 'tenpay' : $_GET['bank_type'];
 		if($apitype == 'card') {
 			if($_G['setting']['seccodestatus'] & 16) {
 				if(!check_seccode($_GET['seccodeverify'], $_GET['sechash'])) {
@@ -128,7 +128,7 @@ if($_GET['op'] == 'base') {
 			$orderid = '';
 
 			require_once libfile('function/trade');
-			$requesturl = credit_payurl($price, $orderid);
+			$requesturl = credit_payurl($price, $orderid, $_GET['bank_type']);
 
 			if(C::t('forum_order')->fetch($orderid)) {
 				showmessage('credits_addfunds_order_invalid', '', array(), array('showdialog' => 1, 'showmsg' => true, 'closetime' => true));
@@ -190,7 +190,7 @@ if($_GET['op'] == 'base') {
 		updatemembercount($to['uid'], array($_G['setting']['creditstransextra'][9] => $netamount), 1, 'RCV', $_G['uid']);
 
 		if(!empty($_GET['transfermessage'])) {
-			$transfermessage = $_GET['transfermessage'];
+			$transfermessage = dhtmlspecialchars($_GET['transfermessage']);
 			notification_add($to['uid'], 'credit', 'transfer', array('credit' => $_G['setting']['extcredits'][$_G['setting']['creditstransextra'][9]]['title'].' '.$netamount.' '.$_G['setting']['extcredits'][$_G['setting']['creditstransextra'][9]]['unit'], 'transfermessage' => $transfermessage));
 		}
 		showmessage('credits_transfer_succeed', 'home.php?mod=spacecp&ac=credit&op=transfer', array(), array('showdialog' => 1, 'showmsg' => true, 'locationtime' => true));

@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: spacecp_share.php 28331 2012-02-28 04:25:50Z liulanbo $
+ *      $Id: spacecp_share.php 31895 2012-10-23 02:22:16Z zhengqingpeng $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -285,6 +285,8 @@ if($_GET['op'] == 'delete') {
 
 		if($type == 'link') {
 			$link = dhtmlspecialchars(trim($_POST['link']));
+			preg_match("/((https?){1}:\/\/|www\.)[^\[\"']+/i", $link, $matches);
+			$link = $matches[0];
 			if($link) {
 				if(!preg_match("/^(http|ftp|https|mms)\:\/\/.{4,300}$/i", $link)) $link = '';
 			}

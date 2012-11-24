@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: db_driver_mysql_slave.php 27449 2012-02-01 05:32:35Z zhangguosheng $
+ *      $Id: db_driver_mysql_slave.php 31912 2012-10-24 04:10:37Z zhangguosheng $
  */
 
 if(!defined('IN_DISCUZ')) {

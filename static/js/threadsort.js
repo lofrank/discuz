@@ -2,7 +2,7 @@
 	[Discuz!] (C)2001-2099 Comsenz Inc.
 	This is NOT a freeware, use is subject to license terms
 
-	$Id: threadsort.js 28987 2012-03-21 10:34:02Z monkey $
+	$Id: threadsort.js 30962 2012-07-04 07:57:45Z zhangjie $
 */
 
 function xmlobj() {
@@ -165,7 +165,7 @@ function checkoption(identifier, required, checktype, checkmaxnum, checkminnum, 
 	ce.innerHTML = '';
 
 	if(checktype == 'select') {
-		if(required != '0' && $('typeoption_' + identifier) == null) {
+		if(required != '0' && ($('typeoption_' + identifier) == null || $('typeoption_' + identifier).value == '0')) {
 			warning(ce, '必填项目没有填写');
 			return false;
 		} else if(required == '0' && ($('typeoption_' + identifier) == null || $('typeoption_' + identifier).value == '0')) {

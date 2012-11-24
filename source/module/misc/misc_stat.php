@@ -4,7 +4,7 @@
 	[Discuz!] (C)2001-2009 Comsenz Inc.
 	This is NOT a freeware, use is subject to license terms
 
-	$Id: misc_stat.php 30045 2012-05-08 03:35:12Z zhengqingpeng $
+	$Id: misc_stat.php 31888 2012-10-22 03:27:47Z liulanbo $
 */
 
 if(!defined('IN_DISCUZ')) {
@@ -194,7 +194,7 @@ function getstatvars_team() {
 	$member_status = C::t('common_member_status')->fetch_all($uids);
 	$member_count = C::t('common_member_count')->fetch_all($uids);
 	foreach($members as $uid => $member) {
-		$member = array_merge($member, $member_status[$uid], $member_count[$uid], $onlinetime[$uid]);
+		$member = array_merge($member, $member_status[$uid], $member_count[$uid], (array)$onlinetime[$uid]);
 		$member['thismonthol'] = $member['thismonth'];
 		$member['totalol'] = $member['total'];
 		if($member['adminid'] == 1 || $member['adminid'] == 2) {

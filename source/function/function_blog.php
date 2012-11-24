@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: function_blog.php 29276 2012-03-31 08:23:41Z svn_project_zhangjie $
+ *      $Id: function_blog.php 32007 2012-10-30 09:59:48Z zhangjie $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -238,6 +238,12 @@ function blog_post($POST, $olds=array()) {
 		updatestat('blog');
 	}
 
+	if($olds['blogid'] && $blog_status == 1) {
+		updatecreditbyaction('publishblog', 0, array('blogs' => -1), '', -1);
+		include_once libfile('function/stat');
+		updatestat('blog');
+	}
+
 	if($POST['makefeed'] && $blog_status == 0) {
 		include_once libfile('function/feed');
 		feed_publish($blogid, 'blogid', $olds?0:1);
@@ -262,7 +268,7 @@ function checkhtml($html) {
 		$replaces[] = '&gt;';
 
 		if($ms[1]) {
-			$allowtags = 'img|a|font|div|table|tbody|caption|tr|td|th|br|p|b|strong|i|u|em|span|ol|ul|li|blockquote|object|param|embed';
+			$allowtags = 'img|a|font|div|table|tbody|caption|tr|td|th|br|p|b|strong|i|u|em|span|ol|ul|li|blockquote|object|param';
 			$ms[1] = array_unique($ms[1]);
 			foreach ($ms[1] as $value) {
 				$searchs[] = "&lt;".$value."&gt;";
@@ -302,6 +308,8 @@ function blog_bbcode($message) {
 function blog_flash($swf_url, $type='') {
 	$width = '520';
 	$height = '390';
+	preg_match("/((https?){1}:\/\/|www\.)[^\[\"']+/i", $swf_url, $matches);
+	$swf_url = $matches[0];
 	if ($type == 'media') {
 		$html = '<object classid="clsid:6bf52a52-394a-11d3-b153-00c04f79faa6" width="'.$width.'" height="'.$height.'">
 			<param name="autostart" value="0">

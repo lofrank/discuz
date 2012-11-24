@@ -4,7 +4,7 @@
  *	  [Discuz!] (C)2001-2099 Comsenz Inc.
  *	  This is NOT a freeware, use is subject to license terms
  *
- *	  $Id: member_connect_register.php 28644 2012-03-06 13:44:19Z houdelei $
+ *	  $Id: member_connect_register.php 31721 2012-09-25 01:43:49Z zhangguosheng $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -107,6 +107,10 @@ if(empty($_POST)) {
 	dsetcookie('con_auth_hash');
 
 	C::t('#qqconnect#common_connect_guest')->delete($conopenid);
+	if(!function_exists('build_cache_userstats')) {
+		require_once libfile('cache/userstats', 'function');
+	}
+	build_cache_userstats();
 
 	if($_G['setting']['connect']['register_groupid']) {
 		$userdata['groupid'] = $groupinfo['groupid'] = $_G['setting']['connect']['register_groupid'];

@@ -2,7 +2,7 @@
 	[Discuz!] (C)2001-2099 Comsenz Inc.
 	This is NOT a freeware, use is subject to license terms
 
-	$Id: bbcode.js 27688 2012-02-10 01:24:30Z svn_project_zhangjie $
+	$Id: bbcode.js 31520 2012-09-05 05:50:12Z chenmengshu $
 */
 
 var re, DISCUZCODE = [];
@@ -315,10 +315,6 @@ function html2bbcode(str) {
 
 	str= str.replace(/&((#(32|127|160|173))|shy|nbsp);/ig, ' ');
 
-	if(fetchCheckbox('allowimgurl')) {
-		str = str.replace(/([^>=\]"'\/]|^)((((https?|ftp):\/\/)|www\.)([\w\-]+\.)*[\w\-\u4e00-\u9fa5]+\.([\.a-zA-Z0-9]+|\u4E2D\u56FD|\u7F51\u7EDC|\u516C\u53F8)((\?|\/|:)+[\w\.\/=\?%\-&~`@':+!]*)+\.(jpg|gif|png|bmp))/ig, '$1[img]$2[/img]');
-	}
-
 	if(!fetchCheckbox('parseurloff')) {
 		str = parseurl(str, 'bbcode', false);
 	}
@@ -389,6 +385,10 @@ function html2bbcode(str) {
 	}
 
 	str = str.replace(/<[\/\!]*?[^<>]*?>/ig, '');
+
+	if(fetchCheckbox('allowimgurl')) {
+		str = str.replace(/([^>=\]"'\/]|^)((((https?|ftp):\/\/)|www\.)([\w\-]+\.)*[\w\-\u4e00-\u9fa5]+\.([\.a-zA-Z0-9]+|\u4E2D\u56FD|\u7F51\u7EDC|\u516C\u53F8)((\?|\/|:)+[\w\.\/=\?%\-&~`@':+!]*)+\.(jpg|gif|png|bmp))/ig, '$1[img]$2[/img]');
+	}
 
 	for(var i = 0; i <= DISCUZCODE['num']; i++) {
 		str = str.replace("[\tDISCUZ_CODE_" + i + "\t]", DISCUZCODE['html'][i]);

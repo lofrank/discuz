@@ -2,7 +2,7 @@
 	[Discuz!] (C)2001-2099 Comsenz Inc.
 	This is NOT a freeware, use is subject to license terms
 
-	$Id: forum.js 28137 2012-02-23 03:28:22Z zhengqingpeng $
+	$Id: forum.js 31416 2012-08-27 07:50:15Z zhangguosheng $
 */
 
 function saveData(ignoreempty) {
@@ -95,6 +95,9 @@ function sidebar_collapse(lang) {
 }
 
 function keyPageScroll(e, prev, next, url, page) {
+	if(loadUserdata('is_blindman')) {
+		return true;
+	}
 	e = e ? e : window.event;
 	var tagname = BROWSER.ie ? e.srcElement.tagName : e.target.tagName;
 	if(tagname == 'INPUT' || tagname == 'TEXTAREA') return;

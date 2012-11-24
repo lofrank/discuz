@@ -2,7 +2,7 @@
 	[Discuz!] (C)2001-2099 Comsenz Inc.
 	This is NOT a freeware, use is subject to license terms
 
-	$Id: common.js 30758 2012-06-18 06:48:59Z chenmengshu $
+	$Id: common.js 31593 2012-09-12 03:22:13Z zhangguosheng $
 */
 
 var BROWSER = {};
@@ -624,7 +624,8 @@ function ajaxpost(formid, showid, waitid, showidclass, submitbtn, recall) {
 	var showidclass = !showidclass ? '' : showidclass;
 	var ajaxframeid = 'ajaxframe';
 	var ajaxframe = $(ajaxframeid);
-	var formtarget = $(formid).target;
+	var curform = $(formid);
+	var formtarget = curform.target;
 
 	var handleResult = function() {
 		var s = '';
@@ -695,11 +696,11 @@ function ajaxpost(formid, showid, waitid, showidclass, submitbtn, recall) {
 	_attachEvent(ajaxframe, 'load', handleResult);
 
 	showloading();
-	$(formid).target = ajaxframeid;
-	var action = $(formid).getAttribute('action');
+	curform.target = ajaxframeid;
+	var action = curform.getAttribute('action');
 	action = hostconvert(action);
-	$(formid).action = action.replace(/\&inajax\=1/g, '')+'&inajax=1';
-	$(formid).submit();
+	curform.action = action.replace(/\&inajax\=1/g, '')+'&inajax=1';
+	curform.submit();
 	if(submitbtn) {
 		submitbtn.disabled = true;
 	}
@@ -1041,6 +1042,41 @@ function showMenu(v) {
 	menuObj.cache = cache;
 	if(layer > JSMENU['layer']) {
 		JSMENU['layer'] = layer;
+	}
+	var hasshow = function(ele) {
+		while(ele.parentNode && ((typeof(ele['currentStyle']) === 'undefined') ? window.getComputedStyle(ele,null) : ele['currentStyle'])['display'] !== 'none') {
+			ele = ele.parentNode;
+		}
+		if(ele === document) {
+			return true;
+		} else {
+			return false;
+		}
+	};
+	if(!menuObj.getAttribute('disautofocus')) {
+		try{
+			var focused = false;
+			var tags = ['input', 'select', 'textarea', 'button', 'a'];
+			for(var i = 0; i < tags.length; i++) {
+				var _all = menuObj.getElementsByTagName(tags[i]);
+				if(_all.length) {
+					for(j = 0; j < _all.length; j++) {
+						if((!_all[j]['type'] || _all[j]['type'] != 'hidden') && hasshow(_all[j])) {
+							_all[j].className += ' hidefocus';
+							_all[j].focus();
+							focused = true;
+							var cobj = _all[j];
+							_attachEvent(_all[j], 'blur', function (){cobj.className = trim(cobj.className.replace(' hidefocus', ''));});
+							break;
+						}
+					}
+				}
+				if(focused) {
+					break;
+				}
+			}
+		} catch (e) {
+		}
 	}
 }
 var delayShowST = null;
@@ -1411,6 +1447,9 @@ function showWindow(k, url, mode, cache, menuv) {
 			menuObj.url = url;
 			url += (url.search(/\?/) > 0 ? '&' : '?') + 'infloat=yes&handlekey=' + k;
 			url += cache == -1 ? '&t='+(+ new Date()) : '';
+			if(BROWSER.ie &&  url.indexOf('referer=') < 0) {
+				url = url + '&referer=' + encodeURIComponent(location);
+			}
 			ajaxget(url, 'fwin_content_' + k, null, '', '', function() {initMenu();show();});
 		} else if(mode == 'post') {
 			menuObj.act = $(url).action;
@@ -1937,10 +1976,15 @@ function cardInit() {
 		pos = obj.getAttribute('c') == '1' ? '43' : obj.getAttribute('c');
 		USERCARDST = setTimeout(function() {ajaxmenu(obj, 500, 1, 2, pos, null, 'p_pop card');}, 250);
 	};
+	var cardids = {};
 	var a = document.body.getElementsByTagName('a');
 	for(var i = 0;i < a.length;i++){
 		if(a[i].getAttribute('c')) {
-			a[i].setAttribute('mid', hash(a[i].href));
+			var href = a[i].getAttribute('href', 1);
+			if(typeof cardids[href] == 'undefined') {
+				cardids[href] = Math.round(Math.random()*10000);
+			}
+			a[i].setAttribute('mid', 'card_' + cardids[href]);
 			a[i].onmouseover = function() {cardShow(this)};
 			a[i].onmouseout = function() {clearTimeout(USERCARDST);};
 		}
@@ -2019,27 +2063,29 @@ function con_handle_response(response) {
 }
 
 function showTopLink() {
-	if($('ft')){
+	var ft = $('ft');
+	if(ft){
+		var scrolltop = $('scrolltop');
 		var viewPortHeight = parseInt(document.documentElement.clientHeight);
 		var scrollHeight = parseInt(document.body.getBoundingClientRect().top);
-		var basew = parseInt($('ft').clientWidth);
-		var sw = $('scrolltop').clientWidth;
+		var basew = parseInt(ft.clientWidth);
+		var sw = scrolltop.clientWidth;
 		if (basew < 1000) {
-			var left = parseInt(fetchOffset($('ft'))['left']);
+			var left = parseInt(fetchOffset(ft)['left']);
 			left = left < sw ? left * 2 - sw : left;
-			$('scrolltop').style.left = ( basew + left ) + 'px';
+			scrolltop.style.left = ( basew + left ) + 'px';
 		} else {
-			$('scrolltop').style.left = 'auto';
-			$('scrolltop').style.right = 0;
+			scrolltop.style.left = 'auto';
+			scrolltop.style.right = 0;
 		}
 
 		if (BROWSER.ie && BROWSER.ie < 7) {
-			$('scrolltop').style.top = viewPortHeight - scrollHeight - 150 + 'px';
+			scrolltop.style.top = viewPortHeight - scrollHeight - 150 + 'px';
 		}
 		if (scrollHeight < -100) {
-			$('scrolltop').style.visibility = 'visible';
+			scrolltop.style.visibility = 'visible';
 		} else {
-			$('scrolltop').style.visibility = 'hidden';
+			scrolltop.style.visibility = 'hidden';
 		}
 	}
 }
@@ -2107,6 +2153,36 @@ function rateStarSet(target,level,input) {
 	$(target).className = 'star star' + level;
 }
 
+function img_onmouseoverfunc(obj) {
+	if(typeof showsetcover == 'function') {
+		showsetcover(obj);
+	}
+	return;
+}
+
+function toggleBlind(dom) {
+	if(dom) {
+		if(loadUserdata('is_blindman')) {
+			saveUserdata('is_blindman', '');
+			dom.title = '开启辅助访问';
+		} else {
+			saveUserdata('is_blindman', '1');
+			dom.title = '关闭辅助访问';
+		}
+	}
+}
+
+function checkBlind() {
+	var dom = $('switchblind');
+	if(dom) {
+		if(loadUserdata('is_blindman')) {
+			dom.title = '关闭辅助访问';
+		} else {
+			dom.title = '开启辅助访问';
+		}
+	}
+}
+
 if(typeof IN_ADMINCP == 'undefined') {
 	if(creditnotice != '' && getcookie('creditnotice')) {
 		_attachEvent(window, 'load', showCreditPrompt, document);
@@ -2118,11 +2194,4 @@ if(typeof IN_ADMINCP == 'undefined') {
 
 if(BROWSER.ie) {
 	document.documentElement.addBehavior("#default#userdata");
-}
-
-function img_onmouseoverfunc(obj) {
-	if(typeof showsetcover == 'function') {
-		showsetcover(obj);
-	}
-	return;
 }

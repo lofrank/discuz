@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: lang_navtitle.php 29183 2012-03-28 06:39:26Z zhengqingpeng $
+ *      $Id: lang_navtitle.php 31175 2012-07-24 02:35:29Z liulanbo $
  *
  *      This file is automatically generate
  */
@@ -36,10 +36,10 @@ $lang = array(
   'ranklist_title_blog_share' => '日志分享排行',
   'ranklist_title_blog_favorite' => '日志收藏排行',
   'ranklist_title_blog_1' => '日志路过排行',
-  'ranklist_title_blog_2' => '日志雷人排行',
-  'ranklist_title_blog_3' => '日志握手排行',
-  'ranklist_title_blog_4' => '日志鲜花排行',
-  'ranklist_title_blog_5' => '日志鸡蛋排行',
+  'ranklist_title_blog_2' => '日志鸡蛋排行',
+  'ranklist_title_blog_3' => '日志鲜花排行',
+  'ranklist_title_blog_4' => '日志握手排行',
+  'ranklist_title_blog_5' => '日志雷人排行',
 
   'ranklist_title_poll_heat' => '投票热度排行',
   'ranklist_title_poll_favorite' => '投票收藏排行',

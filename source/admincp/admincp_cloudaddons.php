@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: admincp_cloudaddons.php 29634 2012-04-23 08:29:45Z monkey $
+ *      $Id: admincp_cloudaddons.php 31997 2012-10-30 06:58:12Z monkey $
  */
 if(!defined('IN_DISCUZ') || !defined('IN_ADMINCP')) {
 	exit('Access Denied');
@@ -25,6 +25,9 @@ if(!$operation) {
 	$extra = '';
 	if(!empty($_GET['id'])) {
 		$extra .= '&mod=app&ac=item&id='.rawurlencode($_GET['id']);
+	}
+	if(!empty($_GET['extra'])) {
+		$extra .= '&'.$_GET['extra'];
 	}
 	$url = cloudaddons_url($extra);
 	echo '<script type="text/javascript">location.href=\''.$url.'\';</script>';

@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: moderate_blog.php 25246 2011-11-02 03:34:53Z zhangguosheng $
+ *      $Id: moderate_blog.php 31710 2012-09-24 07:24:52Z zhengqingpeng $
  */
 
 if(!defined('IN_DISCUZ') || !defined('IN_ADMINCP')) {
@@ -64,7 +64,7 @@ if(!submitcheck('modsubmit') && !$_GET['fast']) {
 		$pagetmp = $pagetmp - 1;
 	} while($pagetmp > 0 && empty($blogarr));
 	$page = $pagetmp + 1;
-	$multipage = multi($modcount, $tpp, $page, ADMINSCRIPT."?action=moderate&operation=blogs&filter=$filter&modfid=$modfid&ppp=$tpp&showcensor=$showcensor");
+	$multipage = multi($modcount, $tpp, $page, ADMINSCRIPT."?action=moderate&operation=blogs&filter=$filter&modfid=$modfid&ppp=$tpp&showcensor=$showcensor&dateline=$dateline");
 
 	echo '<p class="margintop marginbot"><a href="javascript:;" onclick="expandall();">'.cplang('moderate_all_expand').'</a> <a href="javascript:;" onclick="foldall();">'.cplang('moderate_all_fold').'</a></p>';
 

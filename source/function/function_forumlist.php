@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: function_forumlist.php 30293 2012-05-18 09:04:02Z liulanbo $
+ *      $Id: function_forumlist.php 31961 2012-10-26 06:32:42Z monkey $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -47,8 +47,12 @@ function forum(&$forum) {
 	$forum['lastpost'] =count($forum['lastpost']) != 4 ? $lastpost : $forum['lastpost'];
 
 	list($lastpost['tid'], $lastpost['subject'], $lastpost['dateline'], $lastpost['author']) = $forum['lastpost'];
+	$thisforumlastvisit = array();
+	if($_G['cookie']['forum_lastvisit']) {
+		preg_match("/D\_".$forum['fid']."\_(\d+)/", $_G['cookie']['forum_lastvisit'], $thisforumlastvisit);
+	}
 
-	$forum['folder'] = (isset($_G['cookie']['fid'.$forum['fid']]) && $_G['cookie']['fid'.$forum['fid']] > $lastvisit ? $_G['cookie']['fid'.$forum['fid']] : $lastvisit) < $lastpost['dateline'] ? ' class="new"' : '';
+	$forum['folder'] = ($thisforumlastvisit && $thisforumlastvisit[1] > $lastvisit ? $thisforumlastvisit[1] : $lastvisit) < $lastpost['dateline'] ? ' class="new"' : '';
 
 	if($lastpost['tid']) {
 		$lastpost['dateline'] = dgmdate($lastpost['dateline'], 'u');
@@ -285,7 +289,7 @@ function recommendupdate($fid, &$modrecommend, $force = '', $position = 0) {
 			if($recommend['filename'] && strexists($recommend['filename'], "\t")) {
 				$imgd = explode("\t", $recommend['filename']);
 				if($imgd[0] && $imgd[3]) {
-					$recommend['filename'] = 'forum.php?mod=image&aid='.$imgd[0].'&size='.$imgd[1].'x'.$imgd[2].'&key='.rawurlencode($imgd[3]);
+					$recommend['filename'] = getforumimg($imgd[0], 0, $imgd[1], $imgd[2]);
 				}
 			}
 			$recommendlist[] = $recommend;

@@ -3,7 +3,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: spacecp_follow.php 30849 2012-06-26 02:21:32Z zhangguosheng $
+ *      $Id: spacecp_follow.php 32002 2012-10-30 07:53:32Z zhangjie $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -122,6 +122,7 @@ if($op == 'add') {
 		$_POST['replysubmit'] = true;
 		$_GET['fid'] = $fid;
 		$_GET['action'] = 'newthread';
+		$_GET['allownoticeauthor'] = '1';
 		if(empty($_GET['syncbbs'])) {
 			$_GET['subject'] = cutstr($_GET['message'], 75, '');
 		}
@@ -203,6 +204,7 @@ if($op == 'add') {
 		}
 		showmessage('relay_feed_success', dreferer(), array(), array('showdialog'=>true, 'closetime' => true));
 	}
+	$fastpost = $_G['setting']['fastpost'];
 } elseif($op == 'checkfeed') {
 
 	header('Content-Type: text/javascript');

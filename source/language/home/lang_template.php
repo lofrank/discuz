@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: lang_template.php 30789 2012-06-19 09:05:13Z zhengqingpeng $
+ *      $Id: lang_template.php 32006 2012-10-30 09:51:28Z zhengqingpeng $
  *
  *      This file is automatically generate
  */
@@ -431,7 +431,7 @@ $lang = array (
   'friend_editnote' => '备注',
   'friend_list' => '好友列表',
   'friend_manyou_message' => '将好友关系同步至Manyou平台，以便在应用里看到他们',
-  'friend_message' => '按照<a href="javascript:;" class="xw1" onmouseover="showTip(this)" tip="好友热度是系统根据您与好友之间交互的动作自动累计的一个参考值，数值越大，表示您与这位好友互动越频繁">好友热度</a>排序',
+  'friend_message' => '按照<a href="home.php?mod=space&do=friend&order=num" class="xw1" onmouseover="showTip(this)" tip="好友热度是系统根据您与好友之间交互的动作自动累计的一个参考值，数值越大，表示您与这位好友互动越频繁">好友热度</a>排序',
   'friends' => '好友',
   'ignore_group_feed' => '屏蔽用户组动态',
   'interactive' => '互动',

@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: lang_template.php 29150 2012-03-27 09:52:24Z zhaobing $
+ *      $Id: lang_template.php 31530 2012-09-06 04:00:59Z zhangguosheng $
  *
  *      This file is automatically generate
  */
@@ -80,6 +80,7 @@ $lang = array (
   'setup' => '设置',
   'switch_narrow' => '切换到窄版',
   'switch_wide' => '切换到宽版',
+  'switch_blind' => '开启辅助访问',
   'task_doing' => '进行中的任务',
   'to_be_continue' => '继续访问电脑版',
   'usergroup' => '用户组',

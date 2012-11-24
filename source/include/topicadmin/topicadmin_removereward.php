@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: topicadmin_removereward.php 25289 2011-11-03 10:06:19Z zhangguosheng $
+ *      $Id: topicadmin_removereward.php 31998 2012-10-30 07:17:49Z zhengqingpeng $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -27,6 +27,7 @@ if(!submitcheck('modsubmit')) {
 	$log = C::t('common_credit_log')->fetch_by_operation_relatedid('RAC', $thread['tid']);
 	$answererid = $log['uid'];
 	if($thread['price'] < 0) {
+		$thread['price'] = abs($thread['price']);
 		updatemembercount($answererid, array($_G['setting']['creditstransextra'][2] => -$thread['price']));
 	}
 

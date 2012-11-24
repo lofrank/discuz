@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: space_friend.php 29610 2012-04-23 03:14:51Z liulanbo $
+ *      $Id: space_friend.php 32006 2012-10-30 09:51:28Z zhengqingpeng $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -159,7 +159,7 @@ if($_GET['view'] == 'online') {
 	unset($membercount);
 	if($count) {
 
-		$query = C::t('home_friend')->fetch_all_search($space['uid'], $querydata['gid'], $querydata['searchkey'], false, $start, $perpage);
+		$query = C::t('home_friend')->fetch_all_search($space['uid'], $querydata['gid'], $querydata['searchkey'], false, $start, $perpage, $_GET['order'] ? true : false);
 		foreach($query as $value) {
 			$value['uid'] = $value['fuid'];
 			$_G["home_friend_".$space['uid'].'_'.$value['uid']] = $value['isfriend'] = 1;

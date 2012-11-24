@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: Search.php 29325 2012-04-01 09:17:16Z zhouxiaobo $
+ *      $Id: Search.php 31868 2012-10-18 03:38:22Z zhouxiaobo $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -236,14 +236,13 @@ class Cloud_Service_Server_Search extends Cloud_Service_Server_Restful {
 
 		$_postNum = 0;
 		if ($maxPid) {
-			for($j = $fromPostId + 1; $j <= $maxPid; $j++) {
-				if (array_key_exists($j, $data)) {
-					$_postNum++;
-					$res['data'][$j] = $data[$j];
-					$res['maxPid'] = $j;
-					if ($_postNum == $num) {
-						break;
-					}
+			ksort($data);
+			foreach($data as $k => $v) {
+				$_postNum++;
+				$res['data'][$k] = $v;
+				$res['maxPid'] = $k;
+				if ($_postNum == $num) {
+					break;
 				}
 			}
 			if (!$res['maxPid']) {
@@ -340,17 +339,13 @@ class Cloud_Service_Server_Search extends Cloud_Service_Server_Restful {
 		$_postNum = 0;
 		if ($orderType == 'DESC') {
 			if ($minPid) {
-				for($j = $pId - 1; $j >= $minPid; $j--) {
-					if ($j == 0) {
+				krsort($data);
+				foreach($data as $k => $v) {
+					$_postNum++;
+					$res['minPid'] = $k;
+					$res['data'][$k] = $v;
+					if ($_postNum == $num) {
 						break;
-					}
-					if (array_key_exists($j, $data)) {
-						$_postNum++;
-						$res['minPid'] = $j;
-						$res['data'][$j] = $data[$j];
-						if ($_postNum == $num) {
-							break;
-						}
 					}
 				}
 				if (!$res['minPid']) {
@@ -359,14 +354,13 @@ class Cloud_Service_Server_Search extends Cloud_Service_Server_Restful {
 			}
 		} else {
 			if ($maxPid) {
-				for($j = $pId + 1; $j <= $maxPid; $j++) {
-					if (array_key_exists($j, $data)) {
-						$_postNum++;
-						$res['data'][$j] = $data[$j];
-						$res['maxPid'] = $j;
-						if ($_postNum == $num) {
-							break;
-						}
+				ksort($data);
+				foreach($data as $k => $v) {
+					$_postNum++;
+					$res['data'][$k] = $v;
+					$res['maxPid'] = $k;
+					if ($_postNum == $num) {
+						break;
 					}
 				}
 				if (!$res['maxPid']) {
@@ -741,14 +735,13 @@ class Cloud_Service_Server_Search extends Cloud_Service_Server_Restful {
 		}
 		$_threadNum = 0;
 		if ($maxTid) {
-			for($j = $tId + 1; $j <= $maxTid; $j++) {
-				if (array_key_exists($j, $data)) {
-					$_threadNum++;
-					$res['maxTid'] = $j;
-					$res['data'][$j] = $data[$j];
-					if ($_threadNum == $num) {
-						break;
-					}
+			ksort($data);
+			foreach($data as $k => $v) {
+				$_threadNum++;
+				$res['maxTid'] = $k;
+				$res['data'][$k] = $v;
+				if ($_threadNum == $num) {
+					break;
 				}
 			}
 			if (!$res['maxTid']) {
@@ -859,17 +852,13 @@ class Cloud_Service_Server_Search extends Cloud_Service_Server_Restful {
 		$_threadNum = 0;
 		if ($orderType == 'DESC') {
 			if ($minTid) {
-				for($j = $tId - 1; $j >= $minTid; $j--) {
-					if ($j == 0) {
+				krsort($data);
+				foreach($data as $k => $v) {
+					$_threadNum++;
+					$res['minTid'] = $k;
+					$res['data'][$k] = $v;
+					if ($_threadNum == $num) {
 						break;
-					}
-					if (array_key_exists($j, $data)) {
-						$_threadNum++;
-						$res['minTid'] = $j;
-						$res['data'][$j] = $data[$j];
-						if ($_threadNum == $num) {
-							break;
-						}
 					}
 				}
 				if (!$res['minTid']) {
@@ -878,14 +867,13 @@ class Cloud_Service_Server_Search extends Cloud_Service_Server_Restful {
 			}
 		} else {
 			if ($maxTid) {
-				for($j = $tId + 1; $j <= $maxTid; $j++) {
-					if (array_key_exists($j, $data)) {
-						$_threadNum++;
-						$res['data'][$j] = $data[$j];
-						$res['maxTid'] = $j;
-						if ($_threadNum == $num) {
-							break;
-						}
+				ksort($data);
+				foreach($data as $k => $v) {
+					$_threadNum++;
+					$res['data'][$k] = $v;
+					$res['maxTid'] = $k;
+					if ($_threadNum == $num) {
+						break;
 					}
 				}
 				if (!$res['maxTid']) {
@@ -959,16 +947,25 @@ class Cloud_Service_Server_Search extends Cloud_Service_Server_Restful {
 			$searchData = array();
 		}
 
+		$settings = array();
 		foreach($data as $k => $v) {
 			if (substr($k, 0, strlen('hotWordChangedFId_')) == 'hotWordChangedFId_') {
 				$hotWordChangedFId = dintval(substr($k, strlen('hotWordChangedFId_')));
 				C::t('common_syscache')->delete('search_recommend_words_' . $hotWordChangedFId);
 				continue;
 			}
+			if ($k == 'showDiscuzSearch' && $v) {
+				$status = $v == 1 ? 1 : 0;
+				$searchSetting = C::t('common_setting')->fetch('search', true);
+				$searchSetting['forum']['status'] = $status;
+				$settings['search'] = $searchSetting;
+				continue;
+			}
 			$searchData[$k] = $v;
 		}
+		$settings['my_search_data'] = $searchData;
 
-		C::t('common_setting')->update('my_search_data', $searchData);
+		C::t('common_setting')->update_batch($settings);
 		require_once DISCUZ_ROOT . './source/function/function_cache.php';
 		updatecache('setting');
 

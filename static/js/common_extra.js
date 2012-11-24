@@ -2,7 +2,7 @@
 	[Discuz!] (C)2001-2099 Comsenz Inc.
 	This is NOT a freeware, use is subject to license terms
 
-	$Id: common_extra.js 29415 2012-04-11 05:20:28Z zhangguosheng $
+	$Id: common_extra.js 31722 2012-09-25 03:22:12Z zhangguosheng $
 */
 
 function _relatedlinks(rlinkmsgid) {
@@ -17,11 +17,11 @@ function _relatedlinks(rlinkmsgid) {
 		i++;
 		return '#ignore_js_op '+(i - 1)+'#';
 	});
-	i = 0;
+	var alink_i = 0;
 	msg = msg.replace(/(<a.*?<\/a\>)/ig, function($1) {
-		alink[i] = $1;
-		i++;
-		return '#alink '+(i - 1)+'#';
+		alink[alink_i] = $1;
+		alink_i++;
+		return '#alink '+(alink_i - 1)+'#';
 	});
 	var relatedid = new Array();
 	msg = msg.replace(/(^|>)([^<]+)(?=<|$)/ig, function($1, $2, $3) {
@@ -29,6 +29,9 @@ function _relatedlinks(rlinkmsgid) {
 			if(relatedlink[j] && !relatedid[j]) {
 				if(relatedlink[j]['surl'] != '') {
 					var ra = '<a href="'+relatedlink[j]['surl']+'" target="_blank" class="relatedlink">'+relatedlink[j]['sname']+'</a>';
+						alink[alink_i] = ra;
+						ra = '#alink '+alink_i+'#';
+						alink_i++;
 				} else {
 					var ra = '<strong><font color="#FF0000">'+relatedlink[j]['sname']+'</font></strong>';
 				}
@@ -1215,7 +1218,7 @@ function _createPalette(colorid, id, func) {
 		$('append_parent').appendChild(dom);
 	}
 	func = !func ? '' : '|' + func;
-	window.frames["c"+colorid+"_frame"].location.href = STATICURL+"image/admincp/getcolor.htm?c"+colorid+"|"+id+func;
+	window.frames["c"+colorid+"_frame"].location.href = SITEURL+STATICURL+"image/admincp/getcolor.htm?c"+colorid+"|"+id+func;
 	showMenu({'ctrlid':'c'+colorid});
 	var iframeid = "c"+colorid+"_menu";
 	_attachEvent(window, 'scroll', function(){hideMenu(iframeid);});

@@ -4,16 +4,18 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: post_editpost.php 30607 2012-06-06 06:31:41Z liulanbo $
+ *      $Id: post_editpost.php 31980 2012-10-30 01:53:07Z zhengqingpeng $
  */
 
 if(!defined('IN_DISCUZ')) {
 	exit('Access Denied');
 }
-if(($special == 1 && !$_G['group']['allowpostpoll']) || ($special == 2 && !$_G['group']['allowposttrade']) || ($special == 3 && !$_G['group']['allowpostreward']) || ($special == 4 && !$_G['group']['allowpostactivity']) || ($special == 5 && !$_G['group']['allowpostdebate'])) {
+$orig = C::t('forum_post')->fetch('tid:'.$_G['tid'], $pid, false);
+$isfirstpost = $orig['first'] ? 1 : 0;
+
+if($isfirstpost && (($special == 1 && !$_G['group']['allowpostpoll']) || ($special == 2 && !$_G['group']['allowposttrade']) || ($special == 3 && !$_G['group']['allowpostreward']) || ($special == 4 && !$_G['group']['allowpostactivity']) || ($special == 5 && !$_G['group']['allowpostdebate']))) {
 	showmessage('group_nopermission', NULL, array('grouptitle' => $_G['group']['grouptitle']), array('login' => 1));
 }
-$orig = C::t('forum_post')->fetch('tid:'.$_G['tid'], $pid, false);
 if($orig && $orig['fid'] == $_G['fid'] && $orig['tid'] == $_G['tid']) {
 	$user = getuserbyuid($orig['authorid']);
 	$orig['adminid'] = $user['adminid'];
@@ -27,7 +29,6 @@ if($_G['setting']['magicstatus']) {
 	$_G['group']['allowanonymous'] = $_G['group']['allowanonymous'] || $magicid ? 1 : $_G['group']['allowanonymous'];
 }
 
-$isfirstpost = $orig['first'] ? 1 : 0;
 $isorigauthor = $_G['uid'] && $_G['uid'] == $orig['authorid'];
 $isanonymous = ($_G['group']['allowanonymous'] || $orig['anonymous']) && getgpc('isanonymous') ? 1 : 0;
 $audit = $orig['invisible'] == -2 || $thread['displayorder'] == -2 ? $_GET['audit'] : 0;
@@ -85,6 +86,10 @@ if(!submitcheck('editsubmit')) {
 	$codeoffcheck = $postinfo['bbcodeoff'] == 1 ? 'checked="checked"' : '';
 	$tagoffcheck = $postinfo['htmlon'] & 2 ? 'checked="checked"' : '';
 	$htmloncheck = $postinfo['htmlon'] & 1 ? 'checked="checked"' : '';
+	if($htmloncheck) {
+		$editor['editormode'] = 0;
+		$editor['allowswitcheditor'] = 0;
+	}
 	$showthreadsorts = ($thread['sortid'] || !empty($sortid)) && $isfirstpost;
 	$sortid = empty($sortid) ? $thread['sortid'] : $sortid;
 
@@ -580,7 +585,7 @@ if(!submitcheck('editsubmit')) {
 
 			$thread['status'] = setstatus(6, $_GET['allownoticeauthor'] ? 1 : 0, $thread['status']);
 
-			$displayorder = empty($_GET['save']) ? ($thread['displayorder'] == -4 ? 0 : $thread['displayorder']) : -4;
+			$displayorder = empty($_GET['save']) ? ($thread['displayorder'] == -4 ? -4 : $thread['displayorder']) : -4;
 
 			if($isorigauthor && $_G['group']['allowreplycredit']) {
 				$_POST['replycredit_extcredits'] = intval($_POST['replycredit_extcredits']);
@@ -665,7 +670,7 @@ if(!submitcheck('editsubmit')) {
 			$threadupdatearr['typeid'] = $typeid;
 			$threadupdatearr['sortid'] = $sortid;
 			$threadupdatearr['subject'] = $subject;
-			if($readperm != 'ignore') {
+			if($readperm !== 'ignore') {
 				$threadupdatearr['readperm'] = $readperm;
 			}
 			$threadupdatearr['price'] = $price;

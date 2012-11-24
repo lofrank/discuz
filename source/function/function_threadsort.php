@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: function_threadsort.php 30784 2012-06-19 06:47:32Z liulanbo $
+ *      $Id: function_threadsort.php 31822 2012-10-12 06:24:42Z zhangjie $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -119,14 +119,17 @@ function sortsearch($sortid, $sortoptionarray, $searchoption = array(), $selectu
 				if($optionide[$fieldname] == 'range') {
 					$value = explode('|', $value);
 					if($value[0] == 'd') {
-						$sql = DB::field($fieldname, $value[1], '<');
+						$sql = "$fieldname<".intval($value[1]);
 					} elseif($value[0] == 'u') {
-						$sql = DB::field($fieldname, $value[1], '>');
+						$sql = "$fieldname>".intval($value[1]);
 					} else {
 						$sql = "($fieldname BETWEEN ".intval($value[0])." AND ".intval($value[1]).")";
 					}
 				} elseif($optionide[$fieldname] == 'checkbox') {
-					$sql = DB::field($fieldname, '%'.$value.'%', 'like');
+					$sql = '('.DB::field($fieldname, $value).
+						' OR '.DB::field($fieldname, "$value\t%", 'like').
+						' OR '.DB::field($fieldname, "%\t$value", 'like').
+						' OR '.DB::field($fieldname, "%\t$value\t%", 'like').')';
 				} elseif($optionide[$fieldname] == 'select') {
 					$subvalues = $currentchoices = array();
 					if(!empty($_G['forum_optionlist'])) {
@@ -187,9 +190,9 @@ function sortsearch($sortid, $sortoptionarray, $searchoption = array(), $selectu
 				} elseif($option['type'] == 'range') {
 					$value = explode('|', $option['value']);
 					if($value[0] == 'd') {
-						$sql = DB::field($fieldname, $value[1], '<');
+						$sql = "$fieldname<".intval($value[1]);
 					} elseif($value[0] == 'u') {
-						$sql = DB::field($fieldname, $value[1], '>');
+						$sql = "$fieldname>".intval($value[1]);
 					} else {
 						$sql = $value[0] || $value[1] ? "($fieldname BETWEEN ".intval($value[0])." AND ".intval($value[1]).")" : '';
 					}
@@ -306,6 +309,7 @@ function showsorttemplate($sortid, $fid, $sortoptionarray, $templatearray, $thre
 function showsortmodetemplate($sortid, $fid, $sortoptionarray, $templatearray, $threadlist, $threadids = array(), &$verify = array()) {
 	global $_G;
 	$sorttemplate = $replaces = array();
+	$sorttemplate['footer'] = $sorttemplate['body'] = $sorttemplate['header'] = '';
 	if(strexists($templatearray[$sortid], '[loop]') && strexists($templatearray[$sortid], '[/loop]')) {
 		preg_match('/^(.+?)\[loop\](.+?)\[\/loop\](.+?)$/s', $templatearray[$sortid], $r);
 		$sorttemplate['header'] = stripslashes($r[1]);

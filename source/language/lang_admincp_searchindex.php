@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: lang_admincp_searchindex.php 30436 2012-05-29 03:35:07Z monkey $
+ *      $Id: lang_admincp_searchindex.php 32012 2012-10-31 02:20:31Z chenmengshu $
  *
  *	This file is automatically generate
  */
@@ -2372,7 +2372,7 @@ $lang = array (
       7 => '如果开启兑换或交易功能，请填写真实有效的支付宝账号，用于收取用户以现金兑换交易积分的相关款项。如账号无效或安全码有误，将导致用户支付后无法正确对其积分账户自动充值，或进行正常的交易对其积分账户自动充值，或进行正常的交易。如您没有支付宝帐号，请点击这里注册',
       8 => 'ec_alipay_check',
       9 => '支付测试',
-      10 => '本测试将模拟提交 1 元人民币的订单进行测试，如果提交后成功出现付款界面，说明您站点的支付宝功能可以正常使用',
+      10 => '本测试将模拟提交 0.01 元人民币的订单进行测试，如果提交后成功出现付款界面，说明您站点的支付宝功能可以正常使用',
       11 => 'ec_contract',
       12 => '支付宝签约用户设置',
       13 => 'ec_alipay_partner',

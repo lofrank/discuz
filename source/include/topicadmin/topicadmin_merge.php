@@ -4,7 +4,7 @@
  *      [Discuz!] (C)2001-2099 Comsenz Inc.
  *      This is NOT a freeware, use is subject to license terms
  *
- *      $Id: topicadmin_merge.php 29956 2012-05-04 02:06:52Z liulanbo $
+ *      $Id: topicadmin_merge.php 31741 2012-09-26 08:12:08Z zhangjie $
  */
 
 if(!defined('IN_DISCUZ')) {
@@ -93,7 +93,6 @@ if(!submitcheck('modsubmit')) {
 	$fieldarr = array(
 			'views' => $other['views'],
 			'replies' => $other['replies'],
-			'moderated' => 1
 		);
 	C::t('forum_thread')->increase($_G['tid'], $fieldarr);
 	$fieldarr = array(
@@ -101,6 +100,8 @@ if(!submitcheck('modsubmit')) {
 			'author' => $firstpost['author'],
 			'subject' => $firstpost['subject'],
 			'dateline' => $firstpost['dateline'],
+			'moderated' => 1,
+			'maxposition' => $other['maxposition'] + $thread['maxposition'],
 		);
 	C::t('forum_thread')->update($_G['tid'], $fieldarr);
 	updateforumcount($other['fid']);
